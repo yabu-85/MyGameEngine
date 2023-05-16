@@ -48,7 +48,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg; //MSG＝メッセージ入れるための型
-	ZeroMemory(&msg, sizeof(msg));
+	ZeroMemory(&msg, sizeof(msg)); //配列すべてに０を入れるやつ
 	while (msg.message != WM_QUIT) //終了するやつが来るまで
 	{
 		//メッセージあり  メッセージが優先　メッセがなければゲームの処理
