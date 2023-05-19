@@ -55,6 +55,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	while (msg.message != WM_QUIT) //終了するやつが来るまで
 	{
 		//メッセージあり  メッセージが優先　メッセがなければゲームの処理
+		//下のPeekMessage 関数もdefine されてる 
 		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) //PeekMessage ここにメッセがたまっていく
 		{
 			TranslateMessage(&msg);
