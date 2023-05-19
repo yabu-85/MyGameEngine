@@ -45,6 +45,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	//ウィンドウを表示
 	ShowWindow(hWnd, nCmdShow); //作ったウィンドウが見えるようにする
 
+	// | WS_VISIBLE  <--これつけるのでも表示できる サンプルゲームの下
+	//WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg; //MSG＝メッセージ入れるための型
@@ -52,7 +55,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	while (msg.message != WM_QUIT) //終了するやつが来るまで
 	{
 		//メッセージあり  メッセージが優先　メッセがなければゲームの処理
-		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) //PeekMessage ここにメッセがたまっていく
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -71,14 +74,26 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	return 0;
 }
 
+//条件が満たされたら自動的に呼ばれる関数＝コールバック                       自分の識別番号
+//クリックと化されたら開いてるすべてのウィンドウでウィンドウプロシージャを読んで hWnd を渡す
+//UINT にカーソル合わせるとわかるけど unsigned int の略で typedef を使うと命名できる
+//W, L PARAM paramerter 詳細情報や追加情報などが入っている
+
 //ウィンドウプロシージャ（何かあった時によばれる関数　左クリックとか
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
+	case WM_CLOSE:
+		return 0;
+
+	case WM_KEYDOWN:
+		PostQuitMessage(0);
+		return 0;
+
 	case WM_DESTROY: //WM_DESTROY = ウィンドウが閉じられた  変数右クリ→宣言へ移動（全部見れるよ) 本当は全部のやつ書かないといけないけどめんどいから下return 
 		PostQuitMessage(0);  //プログラム終了
 		return 0;
 	}
-	return DefWindowProc(hWnd, msg, wParam, lParam); //なんのcase にもかからなかったら default だよ　ってやつ
+	return DefWindowProc(hWnd, msg, wParam, lParam); //なんのcase にもかからなかったら Windowsのdefaultの機能をするようにしている
 }
