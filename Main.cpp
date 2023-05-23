@@ -166,13 +166,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			//描画処理
 
-
+			//書く用と描画する用二つ用意して書き終わったら　書く用から描画へコピーして表示している
 			//スワップ（バックバッファを表に表示する）
 			pSwapChain->Present(0, 0);
 
 		}
 	}
 
+
+	//create ＝ Relese
 	//解放処理
 	pRenderTargetView->Release();
 	pSwapChain->Release();
