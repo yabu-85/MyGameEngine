@@ -102,7 +102,7 @@ void Direct3D::InitShader()
 	
 	//頂点インプットレイアウト
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		//iti dake
+		//位置データだけ
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
 
 	};
