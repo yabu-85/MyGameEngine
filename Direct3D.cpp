@@ -1,7 +1,7 @@
-#include "Direct3D.h"
+#include <d3dcompiler.h> //誰かが作ったやつ <>
+#include "Direct3D.h"	//自分で作ったやつ ""
 
 //変数
-
 namespace Direct3D
 {
 	ID3D11Device* pDevice;		//デバイス
@@ -9,12 +9,14 @@ namespace Direct3D
 	IDXGISwapChain* pSwapChain;		//スワップチェイン
 	ID3D11RenderTargetView* pRenderTargetView;	//レンダーターゲットビュー
 
+	ID3D11VertexShader* pVertexShader = nullptr;	//頂点シェーダー
+	ID3D11PixelShader* pPixelShader = nullptr;		//ピクセルシェーダー
+	ID3D11InputLayout* pVertexLayout = nullptr;	//頂点インプットレイアウト
 }
 
 
 
 //初期化
-
 void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 
 {
@@ -70,8 +72,6 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	//一時的にバックバッファを取得しただけなので解放
 	pBackBuffer->Release();
 
-
-
 	///////////////////////////ビューポート（描画範囲）設定///////////////////////////////
 	//レンダリング結果を表示する範囲
 	D3D11_VIEWPORT vp;
@@ -87,14 +87,37 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);            // 描画先を設定
 	pContext->RSSetViewports(1, &vp);
 
-
+	//シェーダー準備
+	InitShader();
 
 }
 
+//シェーダー準備
+void Direct3D::InitShader()
+{
+	// 頂点シェーダの作成（コンパイル）
+	ID3DBlob* pCompileVS = nullptr;							//バージョンの指定 ５_０
+	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+	pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
+	
+	//頂点インプットレイアウト
+	D3D11_INPUT_ELEMENT_DESC layout[] = {
+		//iti dake
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
 
+	};
+	pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
+	
+	pCompileVS->Release();
+
+	// ピクセルシェーダの作成（コンパイル）
+	ID3DBlob* pCompilePS = nullptr;
+	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+	pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
+	pCompilePS->Release();
+}
 
 //描画開始
-
 void Direct3D::BeginDraw()
 
 {
@@ -106,10 +129,7 @@ void Direct3D::BeginDraw()
 
 }
 
-
-
 //描画終了
-
 void Direct3D::EndDraw()
 
 {
@@ -118,10 +138,7 @@ void Direct3D::EndDraw()
 	pSwapChain->Present(0, 0);
 }
 
-
-
 //解放処理
-
 void Direct3D::Release()
 {
 	//create ＝ Relese
