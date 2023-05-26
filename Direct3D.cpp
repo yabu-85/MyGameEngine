@@ -1,10 +1,5 @@
 #include "Direct3D.h"
 
-
-const int WINDOW_WIDTH = 800;  //ウィンドウの幅
-const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
-
-
 //変数
 
 namespace Direct3D
@@ -31,8 +26,8 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	ZeroMemory(&scDesc, sizeof(scDesc));
 
 	//描画先のフォーマット
-	scDesc.BufferDesc.Width = WINDOW_WIDTH;		//画面幅
-	scDesc.BufferDesc.Height = WINDOW_HEIGHT;	//画面高さ
+	scDesc.BufferDesc.Width = winW;		//画面幅
+	scDesc.BufferDesc.Height = winH;	//画面高さ
 	scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 何色使えるか
 
 	//FPS（1/60秒に1回）
@@ -80,8 +75,8 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	///////////////////////////ビューポート（描画範囲）設定///////////////////////////////
 	//レンダリング結果を表示する範囲
 	D3D11_VIEWPORT vp;
-	vp.Width = (float)WINDOW_WIDTH;	//幅
-	vp.Height = (float)WINDOW_HEIGHT;//高さ
+	vp.Width = (float)winW;	//幅
+	vp.Height = (float)winH;//高さ
 	vp.MinDepth = 0.0f;	//手前
 	vp.MaxDepth = 1.0f;	//奥
 	vp.TopLeftX = 0;	//左
