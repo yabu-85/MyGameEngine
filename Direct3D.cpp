@@ -86,6 +86,8 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	vp.TopLeftY = 0;	//上
 
 	//データを画面に描画するための一通りの設定（パイプライン）
+	
+	//TOPOLOGY物の配置のこと TRIANGLELIST トライアングルリスト か ストリップ
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  // データの入力種類を指定
 	pContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);            // 描画先を設定
 	pContext->RSSetViewports(1, &vp);
@@ -121,9 +123,9 @@ void Direct3D::InitShader()
 
 	//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
-	rdc.CullMode = D3D11_CULL_BACK;
+	rdc.CullMode = D3D11_CULL_BACK; //CULL
 	rdc.FillMode = D3D11_FILL_SOLID;
-	rdc.FrontCounterClockwise = FALSE;
+	rdc.FrontCounterClockwise = FALSE; //時計回りだけ表示される
 	pDevice->CreateRasterizerState(&rdc, &pRasterizerState); //クリエイト！
 
 	//それぞれをデバイスコンテキストにセット

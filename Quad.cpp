@@ -74,6 +74,7 @@ void Quad::Draw()
 
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(view * proj);
+	//transpose = マトリックス座標の縦横を入れ替えるやつ
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
