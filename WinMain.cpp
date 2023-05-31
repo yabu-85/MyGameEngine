@@ -96,7 +96,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	Direct3D::Release();
-	q->Release();
+	SAFE_DELETE(q);
 
 	return 0;
 }

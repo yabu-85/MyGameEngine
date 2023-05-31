@@ -1,5 +1,6 @@
 #include <d3dcompiler.h> //誰かが作ったやつ <>
 #include "Direct3D.h"	//自分で作ったやつ ""
+#include <assert.h>
 
 //変数
 namespace Direct3D
@@ -70,7 +71,12 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
 	//レンダーターゲットビューを作成
-	pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
+	HRESULT hr;
+	hr = pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
+	if (hr == E_FAIL)
+	{
+		//失敗したとき
+	}
 
 	//一時的にバックバッファを取得しただけなので解放
 	SAFE_RELEASE(pBackBuffer);
@@ -103,6 +109,8 @@ void Direct3D::InitShader()
 	// 頂点シェーダの作成（コンパイル）
 	ID3DBlob* pCompileVS = nullptr;							//バージョンの指定 ５_０
 	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+
+	assert(pCompileVS != nullptr); ///////////
 	pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
 	
 	//頂点インプットレイアウト
@@ -118,6 +126,8 @@ void Direct3D::InitShader()
 	// ピクセルシェーダの作成（コンパイル）
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+
+	assert(pCompileVS != nullptr);//////////
 	pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
 	SAFE_RELEASE(pCompilePS);
 
