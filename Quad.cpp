@@ -13,10 +13,10 @@ void Quad::Initialize()
 	// 頂点情報
 	XMVECTOR vertices[] =
 	{
-		XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),	// 四角形の頂点（左上）
-		XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),	// 四角形の頂点（右上）
-		XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),	// 四角形の頂点（右下）
-		XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),	// 四角形の頂点（左下）		
+		XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),	// 四角形の頂点（左上）0
+		XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),	// 四角形の頂点（右上）1
+		XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),	// 四角形の頂点（右下）2
+		XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),	// 四角形の頂点（左下）3
 	};
 
 
@@ -101,4 +101,7 @@ void Quad::Draw()
 
 void Quad::Release()
 {
+	SAFE_RELEASE(pVertexBuffer_);
+	SAFE_RELEASE(pIndexBuffer_);
+	SAFE_RELEASE(pConstantBuffer_);
 }

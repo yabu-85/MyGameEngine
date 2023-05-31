@@ -7,6 +7,10 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
+//defineは数値の代入ではなくて　文字の置き換え 一行で書かんといけん
+#define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
+#define SAFE_RELEASE(p) if(p != nullptr){ p->Release(); p = nullptr;}
+
 namespace Direct3D
 {
 	//外部にこれ作ってるよって宣言 extern えくすたーｎ

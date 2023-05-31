@@ -73,7 +73,7 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
 
 	//一時的にバックバッファを取得しただけなので解放
-	pBackBuffer->Release();
+	SAFE_RELEASE(pBackBuffer);
 
 	///////////////////////////ビューポート（描画範囲）設定///////////////////////////////
 	//レンダリング結果を表示する範囲
@@ -113,13 +113,13 @@ void Direct3D::InitShader()
 	};
 	pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
 	
-	pCompileVS->Release();
+	SAFE_RELEASE(pCompileVS)
 
 	// ピクセルシェーダの作成（コンパイル）
 	ID3DBlob* pCompilePS = nullptr;
 	D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
-	pCompilePS->Release();
+	SAFE_RELEASE(pCompilePS);
 
 	//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
@@ -161,13 +161,14 @@ void Direct3D::Release()
 {
 	//create ＝ Relese
 	//解放処理 基本的に作った順にdeleteする　今回はいつでもおｋ
-	pRenderTargetView->Release();
-	pSwapChain->Release();
-	pContext->Release();
-	pDevice->Release();
 
-	pRasterizerState->Release();
-	pVertexLayout->Release();
-	pPixelShader->Release();
-	pVertexShader->Release();
+	SAFE_RELEASE(pRenderTargetView);
+	SAFE_RELEASE(pSwapChain);
+	SAFE_RELEASE(pContext);
+	SAFE_RELEASE(pDevice);
+
+	SAFE_RELEASE(pRasterizerState);
+	SAFE_RELEASE(pVertexLayout);
+	SAFE_RELEASE(pPixelShader);
+	SAFE_RELEASE(pVertexShader);
 }
