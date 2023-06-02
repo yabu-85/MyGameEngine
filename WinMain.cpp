@@ -12,8 +12,6 @@ const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-Quad* q = new Quad;
-
 //エントリーポイント Handl Instance
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow) //APIENTRY main にするよみたいな
 {
@@ -64,9 +62,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	ShowWindow(hWnd, nCmdShow); //作ったウィンドウが見えるようにする
 
 	//Direct3D初期化
-	Direct3D::Initialize(winW, winH, hWnd);
+	HRESULT hr;
+	hr = Direct3D::Initialize(winW, winH, hWnd);
+	if (FAILED(hr)) {
+		PostQuitMessage(0);  //プログラム終了
+	}
 
-	q->Initialize();
+	Quad* q = new Quad;
+	hr = q->Initialize();
+	if (FAILED(hr)) {
+		PostQuitMessage(0);  //プログラム終了
+	}
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg; //MSG＝メッセージ入れるための型

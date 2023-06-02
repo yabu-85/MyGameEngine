@@ -24,7 +24,7 @@ class Quad
 public:
 	Quad();
 	~Quad();
-	void Initialize();
+	HRESULT Initialize();
 	void Draw();
 	void Release();
 };
