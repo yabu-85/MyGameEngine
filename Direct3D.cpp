@@ -23,7 +23,6 @@ namespace Direct3D
 //‰Šú‰»
 HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
-
 	///////////////////////////‚¢‚ë‚¢‚ë€”õ‚·‚é‚½‚ß‚Ìİ’è///////////////////////////////
 	//‚¢‚ë‚¢‚ë‚Èİ’è€–Ú‚ğ‚Ü‚Æ‚ß‚½\‘¢‘Ì
 	DXGI_SWAP_CHAIN_DESC scDesc;
