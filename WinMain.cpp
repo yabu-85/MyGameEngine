@@ -98,7 +98,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ƒQ[ƒ€‚Ìˆ—
 			Direct3D::BeginDraw();
 
-			q->Draw();
+			XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(45));
+
+			q->Draw(mat);
 
 			//•`‰æˆ—
 			Direct3D::EndDraw();

@@ -84,11 +84,11 @@ HRESULT Quad::Initialize()
 	return S_OK;
 }
 
-void Quad::Draw()
+void Quad::Draw(XMMATRIX& worldMatrix)
 {
 	//コンスタントバッファに渡す情報
 	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	///transpose = マトリックス座標の縦横を入れ替えるやつ
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
