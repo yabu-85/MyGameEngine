@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "Direct3D.h"
 #include "Quad.h"
+#include "Camera.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";
@@ -68,6 +69,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0);  //プログラム終了
 	}
 
+	Camera::Initialize();
+
 	Quad* q = new Quad;
 	hr = q->Initialize();
 	if (FAILED(hr)) {
@@ -90,6 +93,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		//メッセージなし
 		else
 		{
+			Camera::Update();
+
 			//ゲームの処理
 			Direct3D::BeginDraw();
 

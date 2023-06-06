@@ -223,8 +223,8 @@ void Direct3D::EndDraw()
 //解放処理
 void Direct3D::Release()
 {
-	//create ＝ Relese
-	//解放処理 基本的に作った順にdeleteする　今回はいつでもおｋ
+	///create ＝ Relese
+	///解放処理 基本的に作った順にdeleteする　今回はいつでもおｋ
 
 	SAFE_RELEASE(pRenderTargetView);
 	SAFE_RELEASE(pSwapChain);

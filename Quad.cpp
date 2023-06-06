@@ -1,4 +1,5 @@
 #include "Quad.h"
+#include "Camera.h"
 
 Quad::Quad():pVertexBuffer_(nullptr),pIndexBuffer_(nullptr), pConstantBuffer_(nullptr)
 {
@@ -19,7 +20,6 @@ HRESULT Quad::Initialize()
 		XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),	// 四角形の頂点（左下）3
 	};
 
-
 	// 頂点データ用バッファの設定
 	D3D11_BUFFER_DESC bd_vertex;
 	bd_vertex.ByteWidth = sizeof(vertices);
@@ -33,7 +33,7 @@ HRESULT Quad::Initialize()
 
 	HRESULT hr;
 	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
-	//ヘッダーしか見てないから見つけられない 対処 Direct3Dヘッダーで書いてるよ
+	///ヘッダーしか見てないから見つけられない 対処 Direct3Dヘッダーで書いてるよ
 	if (FAILED(hr)) {
 
 		//エラー処理
@@ -42,7 +42,7 @@ HRESULT Quad::Initialize()
 	}
 
 	//インデックス情報
-	int index[] = { 0,2,3, 0,1,2 }; //時計回りなら230,012 でもおｋ
+	int index[] = { 0,2,3, 0,1,2 }; ///時計回りなら230,012 でもおｋ
 
 	// インデックスバッファを生成する
 	D3D11_BUFFER_DESC   bd;
@@ -87,14 +87,9 @@ HRESULT Quad::Initialize()
 void Quad::Draw()
 {
 	//コンスタントバッファに渡す情報
-	XMVECTOR position = { 0, 3, -10, 0 };	//カメラの位置
-	XMVECTOR target = { 0, 0, 0, 0 };	//カメラの焦点
-	XMMATRIX view = XMMatrixLookAtLH(position, target, XMVectorSet(0, 1, 0, 0));	//ビュー行列
-	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, 800.0f / 600.0f, 0.1f, 100.0f);//射影行列
-
 	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(view * proj);
-	//transpose = マトリックス座標の縦横を入れ替えるやつ
+	cb.matWVP = XMMatrixTranspose(Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	///transpose = マトリックス座標の縦横を入れ替えるやつ
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
