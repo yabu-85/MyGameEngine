@@ -70,6 +70,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	Camera::Initialize();
+	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
 	Quad* q = new Quad;
 	hr = q->Initialize();
@@ -98,9 +99,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-			XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(45));
 
-			q->Draw(mat);
+			static float a = 0;
+			a += 0.5f;
+
+			XMMATRIX matR = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
+			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
+			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
+			
+			XMMATRIX mat = matR * matT * matS; //R * Tだとまわり回転する
+			
+			q->Draw(mat); //参照で受け取ってるから計算式を渡せない？
 
 			//描画処理
 			Direct3D::EndDraw();

@@ -4,10 +4,6 @@
 
 using namespace DirectX;
 
-//defineは数値の代入ではなくて　文字の置き換え 一行で書かんといけん
-#define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
-#define SAFE_RELEASE(p) if(p != nullptr){ p->Release(); p = nullptr;}
-
 //コンスタントバッファー
 struct CONSTANT_BUFFER
 {
