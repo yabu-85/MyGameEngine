@@ -1,9 +1,8 @@
 #pragma once
-
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 //このリンカやけどどこに書いてもいい/使うとこに書いたほうがわかりやすいけどね
-//リンカ
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
@@ -14,8 +13,8 @@
 namespace Direct3D
 {
 	//外部にこれ作ってるよって宣言 extern えくすたーｎ
-	extern ID3D11Device* pDevice; //デバイス
-	extern ID3D11DeviceContext* pContext; //デバイスコンテキスト
+	extern ID3D11Device* pDevice_; //デバイス
+	extern ID3D11DeviceContext* pContext_; //デバイスコンテキスト
 
 	//初期化
 	HRESULT Initialize(int winW, int winH, HWND hWnd);

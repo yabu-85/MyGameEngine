@@ -16,4 +16,7 @@ public:
 	~Texture();
 	HRESULT Load(string fileName);
 	void Release();
+	ID3D11SamplerState* GetSampler() { return pSampler_; };
+	ID3D11ShaderResourceView* GetSRV() { return pSRV_; };
+
 };
