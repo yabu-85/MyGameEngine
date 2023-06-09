@@ -20,6 +20,7 @@ struct VERTEX
 
 class Quad
 {
+protected:
 	//必ずメンバ変数を初期化しよう
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;
@@ -28,8 +29,8 @@ class Quad
 
 public:
 	Quad();
-	~Quad();
-	HRESULT Initialize();
-	void Draw(XMMATRIX& worldMatrix);
-	void Release();
+	virtual ~Quad();
+	virtual HRESULT Initialize();
+	virtual void Draw(XMMATRIX& worldMatrix);
+	virtual void Release();
 };

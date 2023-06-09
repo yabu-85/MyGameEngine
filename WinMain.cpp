@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "Direct3D.h"
 #include "Quad.h"
+#include "Dice.h"
 #include "Camera.h"
 
 //定数宣言
@@ -72,11 +73,21 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Camera::Initialize();
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
+#if 0
 	Quad* q = new Quad;
 	hr = q->Initialize();
 	if (FAILED(hr)) {
 		PostQuitMessage(0);  //プログラム終了
 	}
+
+#else
+	Dice* d = new Dice;
+	hr = d->Initialize();
+	if (FAILED(hr)) {
+		PostQuitMessage(0);  //プログラム終了
+	}
+
+#endif
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg; //MSG＝メッセージ入れるための型
@@ -101,15 +112,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 
 			static float a = 0;
-			a += 0.5f;
+			a += 0.05f;
 
-			XMMATRIX matR = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
+			XMMATRIX matR1 = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
+			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
 			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
 			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
 			
-			XMMATRIX mat = matR * matT * matS; //R * Tだとまわり回転する
+			//R * Tだとまわり回転する
+		//	XMMATRIX mat = matR2 * matT; 
+			XMMATRIX mat = matR1 * matR2 * matT * matS; 
 			
-			q->Draw(mat); //参照で受け取ってるから計算式を渡せない？
+			d->Draw(mat); //参照で受け取ってるから計算式を渡せない？
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -118,7 +132,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	Direct3D::Release();
-	SAFE_DELETE(q);
+	SAFE_DELETE(d);
 
 	return 0;
 }
