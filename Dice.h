@@ -8,6 +8,7 @@ public:
 	Dice();
 	~Dice() override;
 
+	HRESULT InitializeVertex() override;
 	HRESULT InitializeIndex() override;
 	void DrawIndex(XMMATRIX& worldMatrix) override;
 

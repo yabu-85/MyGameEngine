@@ -32,6 +32,7 @@ public:
 	virtual ~Quad();
 
 	virtual HRESULT InitializeIndex();
+	virtual	HRESULT	InitializeVertex();
 	HRESULT InitializeConstantBuffer();
 
 	void Draw(XMMATRIX& worldMatrix);

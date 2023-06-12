@@ -73,27 +73,29 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Camera::Initialize();
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
-#if 1
+#if 0
 	Quad* q = new Quad;
+	
+	hr = q->InitializeVertex();
+	if (FAILED(hr)) PostQuitMessage(0); 
+
 	hr = q->InitializeIndex();
-	if (FAILED(hr)) {
-		PostQuitMessage(0);  //プログラム終了
-	}
+	if (FAILED(hr)) PostQuitMessage(0);
+
 	hr = q->InitializeConstantBuffer();
-	if (FAILED(hr)) {
-		PostQuitMessage(0);  //プログラム終了
-	}
+	if (FAILED(hr)) PostQuitMessage(0);
 
 #else
 	Dice* d = new Dice;
+
+	hr = d->InitializeVertex();
+	if (FAILED(hr)) PostQuitMessage(0);
+
 	hr = d->InitializeIndex();
-	if (FAILED(hr)) {
-		PostQuitMessage(0);  //プログラム終了
-	}
+	if (FAILED(hr)) PostQuitMessage(0);
+
 	hr = d->InitializeConstantBuffer();
-	if (FAILED(hr)) {
-		PostQuitMessage(0);  //プログラム終了
-	}
+	if (FAILED(hr)) PostQuitMessage(0);
 
 #endif
 
@@ -118,7 +120,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-#if 1
+#if 0
 			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
 
 			q->Draw(matT);
@@ -149,7 +151,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Direct3D::Release();
 
-#if 1
+#if 0
 	SAFE_DELETE(q);
 #else
 	SAFE_DELETE(d);

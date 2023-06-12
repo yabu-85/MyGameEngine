@@ -15,8 +15,9 @@ Dice::~Dice()
 
 
 
-HRESULT Dice::InitializeIndex()
+HRESULT Dice::InitializeVertex()
 {
+
 	// 頂点情報
 	VERTEX vertices[] =
 	{
@@ -78,7 +79,10 @@ HRESULT Dice::InitializeIndex()
 		MessageBox(nullptr, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+}
 
+HRESULT Dice::InitializeIndex()
+{
 	//インデックス情報 前・右・奥・左・上・下
 	int index[] = { 0,1,2, 0,2,3, 4,5,6, 4,6,7, 8,9,10, 8,10,11, 12,13,14, 12,14,15, 16,17,18, 16,18,19, 20,21,22, 20,22,23 }; ///時計回りなら230,012 でもおｋ
 
@@ -95,6 +99,7 @@ HRESULT Dice::InitializeIndex()
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
+	HRESULT hr;
 	hr = Direct3D::pDevice_->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr)) {
 		//エラー処理

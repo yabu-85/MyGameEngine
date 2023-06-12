@@ -9,7 +9,7 @@ Quad::~Quad()
 {
 }
 
-HRESULT Quad::InitializeIndex()
+HRESULT Quad::InitializeVertex()
 {
 	// 頂点情報
 	VERTEX vertices[] =
@@ -40,7 +40,10 @@ HRESULT Quad::InitializeIndex()
 		MessageBox(nullptr, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+}
 
+HRESULT Quad::InitializeIndex()
+{
 	//インデックス情報
 	int index[] = { 0,2,3, 0,1,2 }; ///時計回りなら230,012 でもおｋ
 
@@ -57,6 +60,7 @@ HRESULT Quad::InitializeIndex()
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
+	HRESULT hr;
 	hr = Direct3D::pDevice_->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr)) {
 		//エラー処理
