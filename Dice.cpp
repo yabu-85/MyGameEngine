@@ -13,7 +13,9 @@ Dice::~Dice()
 {
 }
 
-HRESULT Dice::Initialize()
+
+
+HRESULT Dice::InitializeIndex()
 {
 	// 頂点情報
 	VERTEX vertices[] =
@@ -23,7 +25,7 @@ HRESULT Dice::Initialize()
 		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) },  //右上 1
 		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },  //右下 2
 		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },  //左下 3
-		
+
 		//2面（右
 		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },   //左上 4
 		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },    //右上 5
@@ -35,13 +37,13 @@ HRESULT Dice::Initialize()
 		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },    //右上 9
 		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 1.0f, 0.0f, 0.0f) },   //右下 10
 		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 1.0f, 0.0f, 0.0f) },   //左下 11
-	
+
 		//4面（左
 		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) },   //左上 12
 		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },  //右上 13
 		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },  //右下 14
 		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },  //左下 15
-	
+
 		//5面（上）
 		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },   //左上 16
 		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },     //右上 17
@@ -99,72 +101,10 @@ HRESULT Dice::Initialize()
 		MessageBox(nullptr, "インデックスバッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
-
-	//コンスタントバッファ作成
-	D3D11_BUFFER_DESC cb;
-	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
-	cb.Usage = D3D11_USAGE_DYNAMIC;
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cb.MiscFlags = 0;
-	cb.StructureByteStride = 0;
-
-	// コンスタントバッファの作成
-	hr = Direct3D::pDevice_->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
-	if (FAILED(hr)) {
-		//エラー処理
-		MessageBox(nullptr, "コンスタントバッファの作成に失敗しました", "エラー", MB_OK); //
-		return hr;
-	}
-
-	pTexture_ = new Texture;
-	pTexture_->Load("Assets\\Dice.png");
-
-	return S_OK;
 }
 
-void Dice::Draw(XMMATRIX& worldMatrix)
+void Dice::DrawIndex(XMMATRIX& worldMatrix)
 {
-	//コンスタントバッファに渡す情報
-	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	///transpose = マトリックス座標の縦横を入れ替えるやつ
-
-	D3D11_MAPPED_SUBRESOURCE pdata;
-	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
-
-	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
-	Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
-
-	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
-	Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
-
-	Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
-
-	//頂点バッファ
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
-	// インデックスバッファーをセット
-	stride = sizeof(int);
-	offset = 0;
-	Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
-
-	//コンスタントバッファ
-	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
-	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
-
 	Direct3D::pContext_->DrawIndexed(36, 0, 0); //Dice initialize のインデックス情報でいれた数
 
-}
-
-void Dice::Release()
-{
-	SAFE_RELEASE(pTexture_);
-
-	SAFE_RELEASE(pVertexBuffer_);
-	SAFE_RELEASE(pIndexBuffer_);
-	SAFE_RELEASE(pConstantBuffer_);
 }

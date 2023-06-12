@@ -30,7 +30,11 @@ protected:
 public:
 	Quad();
 	virtual ~Quad();
-	virtual HRESULT Initialize();
-	virtual void Draw(XMMATRIX& worldMatrix);
-	virtual void Release();
+
+	virtual HRESULT InitializeIndex();
+	HRESULT InitializeConstantBuffer();
+
+	void Draw(XMMATRIX& worldMatrix);
+	virtual void DrawIndex(XMMATRIX& worldMatrix);
+	void Release();
 };

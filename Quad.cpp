@@ -9,7 +9,7 @@ Quad::~Quad()
 {
 }
 
-HRESULT Quad::Initialize()
+HRESULT Quad::InitializeIndex()
 {
 	// 頂点情報
 	VERTEX vertices[] =
@@ -63,7 +63,10 @@ HRESULT Quad::Initialize()
 		MessageBox(nullptr, "インデックスバッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+}
 
+HRESULT Quad::InitializeConstantBuffer()
+{
 	//コンスタントバッファ作成
 	D3D11_BUFFER_DESC cb;
 	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
@@ -73,6 +76,7 @@ HRESULT Quad::Initialize()
 	cb.MiscFlags = 0;
 	cb.StructureByteStride = 0;
 
+	HRESULT hr;
 	// コンスタントバッファの作成
 	hr = Direct3D::pDevice_->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
 	if (FAILED(hr)) {
@@ -85,6 +89,7 @@ HRESULT Quad::Initialize()
 	pTexture_->Load("Assets\\Dice.png");
 
 	return S_OK;
+
 }
 
 void Quad::Draw(XMMATRIX& worldMatrix)
@@ -120,8 +125,11 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 	
-	Direct3D::pContext_->DrawIndexed(6, 0, 0); //quad initialize のインデックス情報でいれた数
+}
 
+void Quad::DrawIndex(XMMATRIX& worldMatrix)
+{
+	Direct3D::pContext_->DrawIndexed(6, 0, 0); //quad initialize のインデックス情報でいれた数
 }
 
 void Quad::Release()

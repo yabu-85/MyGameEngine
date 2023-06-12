@@ -7,8 +7,9 @@ class Dice :
 public:
 	Dice();
 	~Dice() override;
-	HRESULT Initialize() override;
-	void Draw(XMMATRIX& worldMatrix) override;
-	void Release() override;
+
+	HRESULT InitializeIndex() override;
+	void DrawIndex(XMMATRIX& worldMatrix) override;
+
 };
 
