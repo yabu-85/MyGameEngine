@@ -11,6 +11,7 @@ Dice::Dice()
 
 Dice::~Dice()
 {
+	Quad::Release();
 }
 
 

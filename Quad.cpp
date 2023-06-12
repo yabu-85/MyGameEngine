@@ -7,6 +7,7 @@ Quad::Quad():pVertexBuffer_(nullptr),pIndexBuffer_(nullptr), pConstantBuffer_(nu
 
 Quad::~Quad()
 {
+	Quad::Release();
 }
 
 HRESULT Quad::InitializeVertex()
