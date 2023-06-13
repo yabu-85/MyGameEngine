@@ -5,6 +5,8 @@
 #include "Dice.h"
 #include "Camera.h"
 
+#define QUAD 1
+
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";
 const char* WIN_CLASS_TITLEBAR = "サンプルゲーム";
@@ -73,7 +75,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Camera::Initialize();
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
-#if 0
+#if QUAD
+
 	Quad* q = new Quad;
 	
 	hr = q->InitializeVertex();
@@ -86,6 +89,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	if (FAILED(hr)) PostQuitMessage(0);
 
 #else
+
 	Dice* d = new Dice;
 
 	hr = d->InitializeVertex();
@@ -120,13 +124,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-#if 0
-			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
+#if QUAD
 
-			q->Draw(matT);
-			q->DrawIndex(matT);
-
-#else
 			static float a = 0;
 			a += 0.04f;
 
@@ -134,7 +133,21 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a + a)); //n軸に何度回転するラジアンの値を出す
 			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
 			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
+			//R * Tだとまわり回転する
+			XMMATRIX mat = matR1 * matR2 * matT * matS;
 
+			q->Draw(matT);
+			q->DrawIndex(matT);
+
+#else
+
+			static float a = 0;
+			a += 0.04f;
+
+			XMMATRIX matR1 = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
+			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a + a)); //n軸に何度回転するラジアンの値を出す
+			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
+			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
 			//R * Tだとまわり回転する
 			XMMATRIX mat = matR1 * matR2 * matT * matS;
 
@@ -151,10 +164,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Direct3D::Release();
 
-#if 0
+#if QUAD
 	SAFE_DELETE(q);
+
 #else
 	SAFE_DELETE(d);
+
 #endif
 
 	return 0;
