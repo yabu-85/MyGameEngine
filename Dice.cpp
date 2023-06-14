@@ -23,40 +23,40 @@ HRESULT Dice::InitializeVertex()
 	VERTEX vertices[] =
 	{
 		//1面（前
-		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },  //左上 0
-		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) },  //右上 1
-		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },  //右下 2
-		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },  //左下 3
+		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) , XMVectorSet(-1.0f, 1.0f, -9.0f, 0.0f) },  //左上 0
+		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) , XMVectorSet(1.0f, 1.0f, -9.0f, 0.0f) },  //右上 1
+		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) , XMVectorSet(1.0f, -1.0f, -9.0f, 0.0f) },  //右下 2
+		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) , XMVectorSet(-1.0f, -1.0f, -9.0f, 0.0f) },  //左下 3
 
 		//2面（右
-		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) },   //左上 4
-		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },    //右上 5
-		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 1.0f, 0.0f, 0.0f) },   //右下 6
-		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) },   //左下 7
+		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f) , XMVectorSet(9.0f, 1.0f, -1.0f, 0.0f) },   //左上 4
+		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) ,  XMVectorSet(9.0f, 1.0f, 1.0f, 0.0f) },    //右上 5
+		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 1.0f, 0.0f, 0.0f) , XMVectorSet(9.0f, -1.0f, 1.0f, 0.0f) },   //右下 6
+		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) , XMVectorSet(9.0f, -1.0f, -1.0f, 0.0f) },   //左下 7
 
 		//3面（後
-		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },    //左上 8
-		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },    //右上 9
-		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 1.0f, 0.0f, 0.0f) },   //右下 10
-		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 1.0f, 0.0f, 0.0f) },   //左下 11
+		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) ,  XMVectorSet(1.0f, 1.0f, 9.0f, 0.0f) },   //左上 8
+		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) ,  XMVectorSet(-1.0f, 1.0f, 9.0f, 0.0f) },   //右上 9
+		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 1.0f, 0.0f, 0.0f) , XMVectorSet(-1.0f, -1.0f, 9.0f, 0.0f) },   //右下 10
+		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 1.0f, 0.0f, 0.0f) , XMVectorSet(1.0f, -1.0f, 9.0f, 0.0f) },   //左下 11
 
 		//4面（左
-		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) },   //左上 12
-		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },  //右上 13
-		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },  //右下 14
-		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) },  //左下 15
+		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f) ,  XMVectorSet(-9.0f, 1.0f, 1.0f, 0.0f) },  //左上 12
+		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) , XMVectorSet(-9.0f, 1.0f, -1.0f, 0.0f) },  //右上 13
+		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) , XMVectorSet(-9.0f, -1.0f, -1.0f, 0.0f) },  //右下 14
+		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f) , XMVectorSet(-9.0f, -1.0f, 1.0f, 0.0f) },  //左下 15
 
 		//5面（上）
-		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },   //左上 16
-		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },     //右上 17
-		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(1.0f, 0.5f, 0.0f, 0.0f) },  //右下 18
-		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },  //左下 19
+		{ XMVectorSet(-1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) ,   XMVectorSet(-1.0f, 9.0f, 1.0f, 0.0f) }, //左上 16
+		{ XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f), XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) ,     XMVectorSet(1.0f, 9.0f, 1.0f, 0.0f) }, //右上 17
+		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(1.0f, 0.5f, 0.0f, 0.0f) ,   XMVectorSet(1.0f, 9.0f, -1.0f, 0.0f) }, //右下 18
+		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) , XMVectorSet(-1.0f, 9.0f, -1.0f, 0.0f) },  //左下 19
 
 		//6面（下）
-		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) },  //左上 20
-		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) },  //右上 21
-		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) },   //右下 22
-		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) },   //左下 23
+		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.5f, 0.0f, 0.0f, 0.0f) , XMVectorSet(-1.0f, -9.0f, -1.0f, 0.0f) }, //左上 20
+		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.75f, 0.0f, 0.0f, 0.0f) , XMVectorSet(1.0f, -9.0f, -1.0f, 0.0f) }, //右上 21
+		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f) ,  XMVectorSet(1.0f, -9.0f, 1.0f, 0.0f) }, //右下 22
+		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f), XMVectorSet(0.5f, 0.5f, 0.0f, 0.0f) ,  XMVectorSet(-1.0f, -9.0f, 1.0f, 0.0f) }, //左下 23
 
 	};
 

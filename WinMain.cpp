@@ -5,7 +5,7 @@
 #include "Dice.h"
 #include "Camera.h"
 
-#define QUAD 1
+#define QUAD 0
 
 //’è”éŒ¾
 const char* WIN_CLASS_NAME = "SampleGame";
@@ -134,10 +134,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
 			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
 			//R * T‚¾‚Æ‚Ü‚í‚è‰ñ“]‚·‚é
-			XMMATRIX mat = matR1 * matR2 * matT * matS;
+			XMMATRIX mat = matR1 * matT * matS;
 
-			q->Draw(matT);
-			q->DrawIndex(matT);
+			q->Draw(mat);
+			q->DrawIndex(mat);
 
 #else
 
