@@ -6,8 +6,6 @@
 
 using namespace DirectX;
 
-#define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
-
 class Sprite
 {
 	//コンスタントバッファー
@@ -24,12 +22,12 @@ class Sprite
 	};
 	
 protected:
-	UINT64 vertexNum_; //頂点数
+	//UINT64 vertexNum_; //頂点数
+	//UINT64 indexNnum; //インデックス数
+	
+	std::vector<int> index_; //インデックス情報
 	std::vector<VERTEX> vertices_;  //頂点情報
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
-
-	UINT64 indexNnum; //インデックス数　使うかわからん
-	std::vector<int> index_; //インデックス情報
 
 	ID3D11Buffer* pIndexBuffer_; //インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
@@ -50,9 +48,7 @@ public:
 	//解放
 	void Release();
 
-
 private:
-
 	//  Initializeから呼ばれる関数-----------------
 	virtual void InitVertexData(); //頂点情報の準備
 	HRESULT CreateVertexBuffer();  //頂点バッファを作成

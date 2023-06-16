@@ -41,6 +41,8 @@ HRESULT Quad::InitializeVertex()
 		MessageBox(nullptr, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+
+	return S_OK;
 }
 
 HRESULT Quad::InitializeIndex()
@@ -68,6 +70,8 @@ HRESULT Quad::InitializeIndex()
 		MessageBox(nullptr, "インデックスバッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+
+	return S_OK;
 }
 
 HRESULT Quad::InitializeConstantBuffer()
@@ -94,7 +98,6 @@ HRESULT Quad::InitializeConstantBuffer()
 	pTexture_->Load("Assets\\Dice.png");
 
 	return S_OK;
-
 }
 
 void Quad::Draw(XMMATRIX& worldMatrix)
@@ -142,7 +145,6 @@ void Quad::DrawIndex(XMMATRIX& worldMatrix)
 void Quad::Release()
 {
 	SAFE_RELEASE(pTexture_);
-
 	SAFE_RELEASE(pVertexBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pConstantBuffer_);

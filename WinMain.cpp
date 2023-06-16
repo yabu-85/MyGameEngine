@@ -4,8 +4,7 @@
 #include "Quad.h"
 #include "Dice.h"
 #include "Camera.h"
-
-#define QUAD 0
+#include "Sprite.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";
@@ -75,33 +74,33 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Camera::Initialize();
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
-#if QUAD
+	//Sprite
+	Sprite* p = new Sprite;
+	hr = p->Initialize();
+	if (FAILED(hr)) {
+		MessageBox(nullptr, "Spriteの作成に失敗しました", "エラー", MB_OK);
+	}
 
+	/*
+	//Quad
 	Quad* q = new Quad;
-	
 	hr = q->InitializeVertex();
 	if (FAILED(hr)) PostQuitMessage(0); 
-
 	hr = q->InitializeIndex();
 	if (FAILED(hr)) PostQuitMessage(0);
-
 	hr = q->InitializeConstantBuffer();
 	if (FAILED(hr)) PostQuitMessage(0);
 
-#else
-
+	//Dice
 	Dice* d = new Dice;
-
 	hr = d->InitializeVertex();
 	if (FAILED(hr)) PostQuitMessage(0);
-
 	hr = d->InitializeIndex();
 	if (FAILED(hr)) PostQuitMessage(0);
-
 	hr = d->InitializeConstantBuffer();
 	if (FAILED(hr)) PostQuitMessage(0);
-
-#endif
+	*/
+	
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg; //MSG＝メッセージ入れるための型
@@ -124,11 +123,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-#if QUAD
-
 			static float a = 0;
 			a += 0.04f;
-
 			XMMATRIX matR1 = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
 			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a + a)); //n軸に何度回転するラジアンの値を出す
 			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
@@ -136,25 +132,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//R * Tだとまわり回転する
 			XMMATRIX mat = matR1 * matT * matS;
 
-			q->Draw(mat);
-			q->DrawIndex(mat);
+			//q->Draw(mat);
+			//q->DrawIndex(mat);
 
-#else
+			//d->Draw(mat); //参照で受け取ってるから計算式を渡せない？
+			//d->DrawIndex(mat);
 
-			static float a = 0;
-			a += 0.04f;
+			p->Draw(matT);
 
-			XMMATRIX matR1 = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
-			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a + a)); //n軸に何度回転するラジアンの値を出す
-			XMMATRIX matT = XMMatrixTranslation(0, 1, 10);
-			XMMATRIX matS = XMMatrixScaling(2.0, 2.0, 2.0);
-			//R * Tだとまわり回転する
-			XMMATRIX mat = matR1 * matR2 * matT * matS;
-
-			d->Draw(mat); //参照で受け取ってるから計算式を渡せない？
-			d->DrawIndex(mat);
-
-#endif
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -164,13 +149,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Direct3D::Release();
 
-#if QUAD
-	SAFE_DELETE(q);
-
-#else
-	SAFE_DELETE(d);
-
-#endif
+	//SAFE_DELETE(q);
+	//SAFE_DELETE(d);
+	SAFE_DELETE(p);
 
 	return 0;
 }
