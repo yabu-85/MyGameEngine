@@ -22,7 +22,7 @@ class Sprite
 	};
 	
 protected:
-	//UINT64 vertexNum_; //頂点数
+	//UINT64 vertexNum_; //頂点数  今いらない
 	//UINT64 indexNnum; //インデックス数
 	
 	std::vector<int> index_; //インデックス情報

@@ -68,11 +68,11 @@ void Sprite::InitVertexData()
 
 HRESULT Sprite::CreateVertexBuffer()
 {
-	Sprite::InitVertexData();
+	InitVertexData();
 
 	// 頂点データ用バッファの設定
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(vertices_);
+	bd_vertex.ByteWidth = sizeof(VERTEX) * vertices_.size();
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -100,7 +100,7 @@ void Sprite::InitIndexData()
 
 HRESULT Sprite::CreateIndexBuffer()
 {
-	Sprite::InitIndexData();
+	InitIndexData();
 
 	// インデックスバッファを生成する
 	D3D11_BUFFER_DESC   bd;
@@ -113,8 +113,7 @@ HRESULT Sprite::CreateIndexBuffer()
 	D3D11_SUBRESOURCE_DATA InitData;
 
 	//ここも<<<<<--------------
-	InitData.pSysMem = vertices_.data();
-
+	InitData.pSysMem = index_.data();
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
