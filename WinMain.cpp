@@ -146,8 +146,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			XMMATRIX matR1 = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
 			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a + a)); //n軸に何度回転するラジアンの値を出す
-			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
-			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
+			XMMATRIX matT = XMMatrixTranslation(0, 1, 10);
+			XMMATRIX matS = XMMatrixScaling(2.0, 2.0, 2.0);
 			//R * Tだとまわり回転する
 			XMMATRIX mat = matR1 * matR2 * matT * matS;
 

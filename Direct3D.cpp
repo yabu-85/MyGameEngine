@@ -1,7 +1,7 @@
 #include <d3dcompiler.h> //誰かが作ったやつ <>
 #include "Direct3D.h"	//自分で作ったやつ ""
 #include <assert.h>
-
+#include <vector>
 
 //変数
 namespace Direct3D
@@ -127,8 +127,9 @@ HRESULT Direct3D::InitShader()
 {
 	HRESULT hr;
 
-	// 頂点シェーダの作成（コンパイル）
-	ID3DBlob* pCompileVS = nullptr;							//バージョンの指定 ５_０
+	//頂点シェーダの作成（コンパイル）
+	/*
+		ID3DBlob* pCompileVS = nullptr;							//バージョンの指定 ５_０
 	hr = D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	if (FAILED(hr)) {
 		//エラー処理
@@ -136,7 +137,7 @@ HRESULT Direct3D::InitShader()
 		return hr;
 	}
 	assert(pCompileVS != nullptr); ///////////
-	
+
 	hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
 	if (FAILED(hr)) {
 		//エラー処理
@@ -144,8 +145,12 @@ HRESULT Direct3D::InitShader()
 		return hr;
 	}
 
+	*/
+
 	//頂点インプットレイアウト
-	D3D11_INPUT_ELEMENT_DESC layout[] = {
+
+	/*
+	 D3D11_INPUT_ELEMENT_DESC layout[] = {
 		//位置データだけ
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 }, //UV座標
@@ -161,8 +166,13 @@ HRESULT Direct3D::InitShader()
 
 	SAFE_RELEASE(pCompileVS)
 
+
+	*/
+
 	// ピクセルシェーダの作成（コンパイル）
-	ID3DBlob* pCompilePS = nullptr;
+
+	/*
+		ID3DBlob* pCompilePS = nullptr;
 	hr = D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 	if (FAILED(hr)) {
 		//エラー処理
@@ -181,8 +191,12 @@ HRESULT Direct3D::InitShader()
 
 	SAFE_RELEASE(pCompilePS);
 
+
+	*/
+
 	//ラスタライザ作成
-	D3D11_RASTERIZER_DESC rdc = {};
+	/*
+		D3D11_RASTERIZER_DESC rdc = {};
 	rdc.CullMode = D3D11_CULL_BACK; //CULL
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE; //時計回りだけ表示される
@@ -192,6 +206,82 @@ HRESULT Direct3D::InitShader()
 		MessageBox(nullptr, "ラスタライザの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+	*/
+	
+
+
+	//ここから２D
+
+	//頂点シェーダの作成（コンパイル）
+		ID3DBlob* pCompileVS = nullptr;							//バージョンの指定 ５_０
+	hr = D3DCompileFromFile(L"Simple2D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+	if (FAILED(hr)) {
+		//エラー処理
+		MessageBox(nullptr, "頂点シェーダーのコンパイルに失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+	assert(pCompileVS != nullptr); ///////////
+
+	hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
+	if (FAILED(hr)) {
+		//エラー処理
+		MessageBox(nullptr, "頂点シェーダーの作成に失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+
+	//頂点インプットレイアウト
+	 std::vector<D3D11_INPUT_ELEMENT_DESC> layout = {
+		//位置データだけ
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 }, //UV座標
+	};
+	hr = pDevice_->CreateInputLayout(layout.data(), layout.size(), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_);
+//	hr = pDevice_->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout_); vector使った
+
+	if (FAILED(hr)) {
+		//エラー処理
+		MessageBox(nullptr, "頂点インプットレイアウトに失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+	SAFE_RELEASE(pCompileVS)
+
+	// ピクセルシェーダの作成（コンパイル）
+	ID3DBlob* pCompilePS = nullptr;
+	hr = D3DCompileFromFile(L"Simple2D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+	if (FAILED(hr)) {
+		//エラー処理
+		MessageBox(nullptr, "ピクセルシェーダーのコンパイルに失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+
+	assert(pCompilePS != nullptr);//////////
+
+	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader_);
+	if (FAILED(hr)) {
+		//エラー処理
+		MessageBox(nullptr, "ピクセルシェーダーの作成に失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+
+	SAFE_RELEASE(pCompilePS);
+
+
+	//ラスタライザ作成
+		D3D11_RASTERIZER_DESC rdc = {};
+	rdc.CullMode = D3D11_CULL_BACK; //CULL
+	rdc.FillMode = D3D11_FILL_SOLID;
+	rdc.FrontCounterClockwise = FALSE; //時計回りだけ表示される
+	hr = pDevice_->CreateRasterizerState(&rdc, &pRasterizerState_); //クリエイト！
+	if (FAILED(hr)) {
+		//エラー処理
+		MessageBox(nullptr, "ラスタライザの作成に失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+
+
+
+
+
 
 	//それぞれをデバイスコンテキストにセット
 	pContext_->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー
