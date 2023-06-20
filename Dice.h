@@ -1,16 +1,11 @@
 #pragma once
 #include "Quad.h"
-
 class Dice :
-    public Quad
+	public Quad
 {
-public:
-	Dice();
-	~Dice() override;
+	//頂点情報の準備
+	void InitVertexData()	override;
 
-	HRESULT InitializeVertex() override;
-	HRESULT InitializeIndex() override;
-	void DrawIndex(XMMATRIX& worldMatrix) override;
-
+	//インデックス情報を準備
+	void InitIndexData()	override;
 };
-

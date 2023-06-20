@@ -2,6 +2,7 @@
 #include "Direct3D.h"
 #include <DirectXMath.h> //XMVECTOR を使うためのやつ
 #include "Texture.h"
+#include <vector>
 
 using namespace DirectX;
 
@@ -23,7 +24,11 @@ struct VERTEX
 class Quad
 {
 protected:
-	//必ずメンバ変数を初期化しよう
+	std::vector<int> index_; //インデックス情報
+	int indexNum_;
+	int vertexNum_;
+	std::vector<VERTEX> vertices_;
+
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
@@ -33,11 +38,24 @@ public:
 	Quad();
 	virtual ~Quad();
 
-	virtual HRESULT InitializeIndex();
-	virtual	HRESULT	InitializeVertex();
-	HRESULT InitializeConstantBuffer();
-
-	void Draw(XMMATRIX& worldMatrix);
-	virtual void DrawIndex(XMMATRIX& worldMatrix);
 	void Release();
+	HRESULT Initialize();
+	void Draw(XMMATRIX& worldMatrix);
+	
+private:
+	//  Initializeから呼ばれる関数-----------------
+	virtual void InitVertexData(); //頂点情報の準備
+	HRESULT CreateVertexBuffer();  //頂点バッファを作成
+
+	virtual void InitIndexData();  //インデックス情報を準備
+	HRESULT CreateIndexBuffer();  //インデックスバッファを作成
+
+	HRESULT CreateConstantBuffer(); //コンスタントバッファを作成
+
+	HRESULT LoadTexture(); //テクスチャをロード
+
+
+	// Draw関数から呼ばれる関数--------------------
+	void PassDataToCB(DirectX::XMMATRIX& worldMatrix);  //コンス
+	void SetBufferToPipeline();                         //各バッファ
 };

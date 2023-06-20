@@ -1,26 +1,24 @@
-//インクルード
 #include <Windows.h>
 #include "Direct3D.h"
 #include "Quad.h"
-#include "Dice.h"
 #include "Camera.h"
+#include "Dice.h"
 #include "Sprite.h"
+#include "Transform.h"
 
 //定数宣言
-const char* WIN_CLASS_NAME = "SampleGame";
-const char* WIN_CLASS_TITLEBAR = "サンプルゲーム";
+const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-//エントリーポイント Handl Instance
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow) //APIENTRY main にするよみたいな
+//エントリーポイント
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
 	//ウィンドウクラス（設計図）を作成
 	WNDCLASSEX wc;
-
 	wc.cbSize = sizeof(WNDCLASSEX);             //この構造体のサイズ
 	wc.hInstance = hInstance;                   //インスタンスハンドル
 	wc.lpszClassName = WIN_CLASS_NAME;            //ウィンドウクラス名
@@ -33,82 +31,59 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH); //背景（白）
-
-	RegisterClassEx(&wc);  //クラスを登録 設計図を作ってレジに入れる
-
+	RegisterClassEx(&wc); //クラスを登録
 
 	//ウィンドウサイズの計算
 	RECT winRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-	AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, FALSE); //ここのfalse はメニューがありなしか決める
+	AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, FALSE);
 	int winW = winRect.right - winRect.left;     //ウィンドウ幅
 	int winH = winRect.bottom - winRect.top;     //ウィンドウ高さ
-
 
 	//ウィンドウを作成
 	HWND hWnd = CreateWindow(
 		WIN_CLASS_NAME,         //ウィンドウクラス名
-		WIN_CLASS_TITLEBAR,     //タイトルバーに表示する内容
+		"サンプルゲーム",     //タイトルバーに表示する内容
 		WS_OVERLAPPEDWINDOW, //スタイル（普通のウィンドウ）
 		CW_USEDEFAULT,       //表示位置左（おまかせ）
 		CW_USEDEFAULT,       //表示位置上（おまかせ）
-		WINDOW_WIDTH,                 //ウィンドウ幅
-		WINDOW_HEIGHT,                 //ウィンドウ高さ
+		winW,               //ウィンドウ幅
+		winH,               //ウィンドウ高さ
 		NULL,                //親ウインドウ（なし）
 		NULL,                //メニュー（なし）
 		hInstance,           //インスタンス
 		NULL                 //パラメータ（なし）
 	);
-	// | WS_VISIBLE  <--これつけるのでも表示できる サンプルゲームの下
-	//WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 
 	//ウィンドウを表示
-	ShowWindow(hWnd, nCmdShow); //作ったウィンドウが見えるようにする
+	ShowWindow(hWnd, nCmdShow);
 
 	//Direct3D初期化
 	HRESULT hr;
 	hr = Direct3D::Initialize(winW, winH, hWnd);
-	if (FAILED(hr)) {
-		PostQuitMessage(0);  //プログラム終了
+	if (FAILED(hr))
+	{
+		PostQuitMessage(0); //エラー起きたら強制終了
 	}
-
-	//Direct3D::SetShader(SHADER_MAX);
 
 	Camera::Initialize();
-	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
-	//Sprite
-	Sprite* s = new Sprite;
-	hr = s->Initialize();
-	if (FAILED(hr)) {
-		MessageBox(nullptr, "Spriteの作成に失敗しました", "エラー", MB_OK);
-	}
 
-	//Quad
-	Quad* q = new Quad;
-	hr = q->InitializeVertex();
-	if (FAILED(hr)) PostQuitMessage(0); 
-	hr = q->InitializeIndex();
-	if (FAILED(hr)) PostQuitMessage(0);
-	hr = q->InitializeConstantBuffer();
-	if (FAILED(hr)) PostQuitMessage(0);
 
-	//Dice
-	Dice* d = new Dice;
-	hr = d->InitializeVertex();
-	if (FAILED(hr)) PostQuitMessage(0);
-	hr = d->InitializeIndex();
-	if (FAILED(hr)) PostQuitMessage(0);
-	hr = d->InitializeConstantBuffer();
-	if (FAILED(hr)) PostQuitMessage(0);
-	
+	Quad* pQuad = new Quad;
+	pQuad->Initialize();
+
+	Dice* pDice = new Dice;
+	hr = pDice->Initialize();
+	Sprite* pSprite = new Sprite;
+	hr = pSprite->Initialize();
+
 	//メッセージループ（何か起きるのを待つ）
-	MSG msg; //MSG＝メッセージ入れるための型
-	ZeroMemory(&msg, sizeof(msg)); //配列すべてに０を入れるやつ
-	while (msg.message != WM_QUIT) //終了するやつが来るまで
+	MSG msg;
+	ZeroMemory(&msg, sizeof(msg));
+	while (msg.message != WM_QUIT)
 	{
-		//メッセージあり  メッセージが優先　メッセがなければゲームの処理
-		//下のPeekMessage 関数もdefine されてる 
-		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) //PeekMessage ここにメッセがたまっていく
+		//メッセージあり
+		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -122,19 +97,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
-			static float a = 0;
-			a += 0.04f;
+			static float angle = 0;
+			angle += 0.05;
+			XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle)) * XMMatrixTranslation(0, 3, 0);
+			pQuad->Draw(mat);
 
-			//R * Tだとまわり回転する
-			XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(a)) * XMMatrixTranslation(0, 0, 0);
-			mat = XMMatrixTranslation(0, 0, 0) * XMMatrixScaling(0.5, 0.5, 0.5);
-			XMMATRIX mat2 = XMMatrixTranslation(0, 0, 0) * XMMatrixScaling(0.5, 0.5, 0.5);
-
-			//XMMatrixIdentity();
-
-			q->Draw(mat);
-			d->Draw(mat);
-			s->Draw(mat2);
+			mat = XMMatrixScaling(512.0f / 800.0f, 256.0f / 600.0f, 1.0f);
+			//pSprite->Draw(mat);
 
 
 			//描画処理
@@ -142,29 +111,24 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 		}
 	}
+	
+	SAFE_DELETE(pQuad);
+	SAFE_DELETE(pDice);
+	SAFE_DELETE(pSprite);
 
 	Direct3D::Release();
-
-	SAFE_DELETE(q);
-	SAFE_DELETE(d);
-	SAFE_DELETE(s);
 
 	return 0;
 }
 
-//条件が満たされたら自動的に呼ばれる関数＝コールバック                       自分の識別番号
-//クリックと化されたら開いてるすべてのウィンドウでウィンドウプロシージャを読んで hWnd を渡す
-//UINT にカーソル合わせるとわかるけど unsigned int の略で typedef を使うと命名できる
-//W, L PARAM paramerter 詳細情報や追加情報などが入っている
-
-//ウィンドウプロシージャ（何かあった時によばれる関数　左クリックとか
+//ウィンドウプロシージャ（何かあった時によばれる関数）
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
-	case WM_DESTROY: //WM_DESTROY = ウィンドウが閉じられた  変数右クリ→宣言へ移動（全部見れるよ) 本当は全部のやつ書かないといけないけどめんどいから下defaultへ
+	case WM_DESTROY:
 		PostQuitMessage(0);  //プログラム終了
 		return 0;
 	}
-	return DefWindowProc(hWnd, msg, wParam, lParam); //なんのcase にもかからなかったら Windowsのdefaultの機能をするようにしている
+	return DefWindowProc(hWnd, msg, wParam, lParam);
 }

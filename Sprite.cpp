@@ -47,7 +47,7 @@ void Sprite::Draw(XMMATRIX& worldMatrix)
 	SetBufferToPipeline();
 
 	//ここ引数違うかも <<< (indexNum,0,0)
-	Direct3D::pContext_->DrawIndexed(6,0,0);
+	Direct3D::pContext_->DrawIndexed(indexNum_,0,0);
 }
 
 void Sprite::Release()
@@ -59,6 +59,9 @@ void Sprite::Release()
 	SAFE_RELEASE(pConstantBuffer_);
 }
 
+
+//private
+
 void Sprite::InitVertexData()
 {
 	// 頂点情報
@@ -69,6 +72,8 @@ void Sprite::InitVertexData()
 		{ XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },   // 四角形の頂点（右下）2
 		{ XMVectorSet(-1.0f,-1.0f, 0.0f, 0.0f), XMVectorSet(0.0f,  1.0f, 0.0f, 0.0f) },   // 四角形の頂点（左下）3
 	};
+
+	vertexNum_ = vertices_.size();	//全データのサイズ　÷　1頂点分のサイズ　＝　頂点数
 }
 
 HRESULT Sprite::CreateVertexBuffer()
@@ -84,8 +89,6 @@ HRESULT Sprite::CreateVertexBuffer()
 	bd_vertex.MiscFlags = 0;
 	bd_vertex.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA data_vertex;
-
-	//ここ違うかも<<<<--------------
 	data_vertex.pSysMem = vertices_.data();
 
 	HRESULT hr;
@@ -95,12 +98,15 @@ HRESULT Sprite::CreateVertexBuffer()
 		MessageBox(nullptr, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+
 }
 
 void Sprite::InitIndexData()
 {
 	//インデックス情報
 	index_ = { 0,2,3, 0,1,2 }; ///時計回りなら230,012 でもおｋ
+
+	indexNum_ = index_.size();
 }
 
 HRESULT Sprite::CreateIndexBuffer()
@@ -110,7 +116,7 @@ HRESULT Sprite::CreateIndexBuffer()
 	// インデックスバッファを生成する
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(index_);
+	bd.ByteWidth = sizeof(int) * indexNum_;
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
@@ -204,5 +210,4 @@ void Sprite::SetBufferToPipeline()
 	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-	Direct3D::pContext_->DrawIndexed(6, 0, 0);
 }
