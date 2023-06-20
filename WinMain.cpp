@@ -71,17 +71,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0);  //プログラム終了
 	}
 
+	//Direct3D::SetShader(SHADER_MAX);
+
 	Camera::Initialize();
 	Camera::SetTarget(XMFLOAT3(0, 0, 0));
 
 	//Sprite
-	Sprite* p = new Sprite;
-	hr = p->Initialize();
+	Sprite* s = new Sprite;
+	hr = s->Initialize();
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "Spriteの作成に失敗しました", "エラー", MB_OK);
 	}
 
-	/*
 	//Quad
 	Quad* q = new Quad;
 	hr = q->InitializeVertex();
@@ -99,9 +100,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	if (FAILED(hr)) PostQuitMessage(0);
 	hr = d->InitializeConstantBuffer();
 	if (FAILED(hr)) PostQuitMessage(0);
-	*/
 	
-
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg; //MSG＝メッセージ入れるための型
 	ZeroMemory(&msg, sizeof(msg)); //配列すべてに０を入れるやつ
@@ -125,20 +124,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			static float a = 0;
 			a += 0.04f;
-			XMMATRIX matR1 = XMMatrixRotationY(XMConvertToRadians(a)); //n軸に何度回転するラジアンの値を出す
-			XMMATRIX matR2 = XMMatrixRotationX(XMConvertToRadians(a + a)); //n軸に何度回転するラジアンの値を出す
-			XMMATRIX matT = XMMatrixTranslation(0, 0, 0);
-			XMMATRIX matS = XMMatrixScaling(1, 1, 1);
+
 			//R * Tだとまわり回転する
-			XMMATRIX mat = matR1 * matT * matS;
+			XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(a)) * XMMatrixTranslation(0, 0, 0);
+			mat = XMMatrixTranslation(0, 0, 0) * XMMatrixScaling(0.5, 0.5, 0.5);
+			XMMATRIX mat2 = XMMatrixTranslation(0, 0, 0) * XMMatrixScaling(0.5, 0.5, 0.5);
 
-			//q->Draw(mat);
-			//q->DrawIndex(mat);
+			//XMMatrixIdentity();
 
-			//d->Draw(mat); //参照で受け取ってるから計算式を渡せない？
-			//d->DrawIndex(mat);
-
-			p->Draw(matT);
+			q->Draw(mat);
+			d->Draw(mat);
+			s->Draw(mat2);
 
 
 			//描画処理
@@ -149,9 +145,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Direct3D::Release();
 
-	//SAFE_DELETE(q);
-	//SAFE_DELETE(d);
-	SAFE_DELETE(p);
+	SAFE_DELETE(q);
+	SAFE_DELETE(d);
+	SAFE_DELETE(s);
 
 	return 0;
 }

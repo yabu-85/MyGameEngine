@@ -27,8 +27,8 @@ protected:
 	
 	std::vector<int> index_; //インデックス情報
 	std::vector<VERTEX> vertices_;  //頂点情報
-	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 
+	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_; //インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
 	Texture* pTexture_; //テクスチャ

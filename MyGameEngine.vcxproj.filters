@@ -13,53 +13,87 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\Camera">
+      <UniqueIdentifier>{573d7539-3131-4e08-bba8-ba35d9f3b1d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Dice">
+      <UniqueIdentifier>{a5ef8f20-bb97-4bdf-b53a-b0b1f7fad3eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Direct3D">
+      <UniqueIdentifier>{a8e595e7-0085-4c73-a8d4-54551ae96db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\HLSL">
+      <UniqueIdentifier>{95687f18-058d-4b8a-bbb4-6b0760afac09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Quad">
+      <UniqueIdentifier>{ae5ba7ce-48cd-4898-93c4-e3a473d8ec11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Sprite">
+      <UniqueIdentifier>{3d2dfefe-48c2-45fd-8b5c-9907d46edc4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Texture">
+      <UniqueIdentifier>{25384775-69c1-4337-8e07-aff2cff15b4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Transform">
+      <UniqueIdentifier>{d71b4dd1-1010-48b6-96d0-064295a84ca9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Direct3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Quad.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Direct3D.cpp">
+      <Filter>ソース ファイル\Direct3D</Filter>
     </ClCompile>
     <ClCompile Include="Dice.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Dice</Filter>
+    </ClCompile>
+    <ClCompile Include="Quad.cpp">
+      <Filter>ソース ファイル\Quad</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>ソース ファイル\Transform</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Direct3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Quad.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Direct3D.h">
+      <Filter>ソース ファイル\Direct3D</Filter>
     </ClInclude>
     <ClInclude Include="Dice.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Dice</Filter>
+    </ClInclude>
+    <ClInclude Include="Quad.h">
+      <Filter>ソース ファイル\Quad</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ソース ファイル\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>ソース ファイル\Transform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Simple3D.hlsl" />
-    <FxCompile Include="Simple2D.hlsl" />
+    <FxCompile Include="Simple2D.hlsl">
+      <Filter>ソース ファイル\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Simple3D.hlsl">
+      <Filter>ソース ファイル\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

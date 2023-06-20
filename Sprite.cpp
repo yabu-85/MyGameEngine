@@ -41,8 +41,13 @@ HRESULT Sprite::Initialize()
 
 void Sprite::Draw(XMMATRIX& worldMatrix)
 {
+	Direct3D::SetShader(SHADER_2D);
+
 	PassDataToCB(worldMatrix);
 	SetBufferToPipeline();
+
+	//Ç±Ç±à¯êîà·Ç§Ç©Ç‡ <<< (indexNum,0,0)
+	Direct3D::pContext_->DrawIndexed(6,0,0);
 }
 
 void Sprite::Release()
