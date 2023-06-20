@@ -67,13 +67,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Camera::Initialize();
 
-
-
 	Quad* pQuad = new Quad;
 	pQuad->Initialize();
 
 	Dice* pDice = new Dice;
 	hr = pDice->Initialize();
+
 	Sprite* pSprite = new Sprite;
 	hr = pSprite->Initialize();
 
