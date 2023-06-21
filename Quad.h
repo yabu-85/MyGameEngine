@@ -1,8 +1,9 @@
 #pragma once
-#include "Direct3D.h"
-#include <DirectXMath.h> //XMVECTOR ‚ğg‚¤‚½‚ß‚Ì‚â‚Â
-#include "Texture.h"
+#include <DirectXMath.h>
 #include <vector>
+#include "Camera.h"
+#include "Texture.h"
+#include "Direct3D.h"
 
 using namespace DirectX;
 
@@ -10,7 +11,7 @@ using namespace DirectX;
 struct CONSTANT_BUFFER
 {
 	XMMATRIX	matWVP;
-	XMMATRIX	matW;
+	XMMATRIX	matNormal; //matW‚©‚çNormal—p‚É‰ü–¼
 };
 
 //’¸“_î•ñ

@@ -143,11 +143,11 @@ void Quad::PassDataToCB(DirectX::XMMATRIX& worldMatrix)
 {
 	//コンスタントバッファに渡す情報
 	CONSTANT_BUFFER cb;
+	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matNormal = XMMatrixTranspose(worldMatrix);
+
+	//コンスタントバッファの更新
 	D3D11_MAPPED_SUBRESOURCE pdata;
-
-	///transpose = マトリックス座標の縦横を入れ替えるやつ
-	cb.matW = XMMatrixTranspose(worldMatrix);
-
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
 
