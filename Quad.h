@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Direct3D.h"
+#include "Transform.h"
 
 using namespace DirectX;
 
@@ -41,7 +42,7 @@ public:
 
 	void Release();
 	HRESULT Initialize();
-	void Draw(XMMATRIX& worldMatrix);
+	void Draw(Transform& transform);
 	
 private:
 	//  Initializeから呼ばれる関数-----------------
@@ -57,6 +58,6 @@ private:
 
 
 	// Draw関数から呼ばれる関数--------------------
-	void PassDataToCB(DirectX::XMMATRIX& worldMatrix);  //コンス
+	void PassDataToCB(Transform transform);	//コンスタントバッファに各種情報を渡す
 	void SetBufferToPipeline();                         //各バッファ
 };

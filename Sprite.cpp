@@ -39,16 +39,23 @@ HRESULT Sprite::Initialize()
 	return S_OK;
 }
 
-void Sprite::Draw(XMMATRIX& worldMatrix)
+void Sprite::Draw(Transform& transform)
 {
 	Direct3D::SetShader(SHADER_2D);
 
-	PassDataToCB(worldMatrix);
+
+	transform.Calclation();//トランスフォームを計算
+
+	//コンスタントバッファに情報を渡す
+	PassDataToCB(transform.GetWorldMatrix());
+
+	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
 	SetBufferToPipeline();
 
-	//ここ引数違うかも <<< (indexNum,0,0)
-	Direct3D::pContext_->DrawIndexed(indexNum_,0,0);
+	//描画
+	Direct3D::pContext_->DrawIndexed(indexNum_, 0, 0);
 }
+
 
 void Sprite::Release()
 {
@@ -173,7 +180,7 @@ HRESULT Sprite::LoadTexture()
 	return S_OK;
 }
 
-void Sprite::PassDataToCB(DirectX::XMMATRIX& worldMatrix)
+void Sprite::PassDataToCB(XMMATRIX worldMatrix)
 {
 	//コンスタントバッファに渡す情報
 	CONSTANT_BUFFER cb;

@@ -48,11 +48,13 @@ HRESULT Quad::Initialize()
 	return S_OK;
 }
 
-void Quad::Draw(XMMATRIX& worldMatrix)
+void Quad::Draw(Transform& transform)
 {
 	Direct3D::SetShader(SHADER_3D);
 
-	PassDataToCB(worldMatrix);
+	transform.Calclation();//トランスフォームを計算
+
+	PassDataToCB(transform);
 	SetBufferToPipeline();
 
 	Direct3D::pContext_->DrawIndexed(index_.size(), 0, 0);
@@ -139,12 +141,13 @@ HRESULT Quad::CreateIndexBuffer()
 	return S_OK;
 }
 
-void Quad::PassDataToCB(DirectX::XMMATRIX& worldMatrix)
+void Quad::PassDataToCB(Transform transform)
 {
-	//コンスタントバッファに渡す情報
 	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.matNormal = XMMatrixTranspose(worldMatrix);
+
+	//コンスタントバッファに渡す情報
+	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 
 	//コンスタントバッファの更新
 	D3D11_MAPPED_SUBRESOURCE pdata;

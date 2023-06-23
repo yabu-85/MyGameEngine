@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include <DirectXMath.h> //XMVECTOR を使うためのやつ
 #include <vector>
+#include "Transform.h"
 
 using namespace DirectX;
 
@@ -42,8 +43,8 @@ public:
 	HRESULT Initialize();
 
 	//描画
-	//引数：worldMatrix ワールド行列
-	void Draw(XMMATRIX& worldMatrix);
+	//引数：transform	トランスフォームクラスオブジェクト
+	void Draw(Transform& transform);
 
 	//解放
 	void Release();
@@ -61,7 +62,7 @@ private:
 	HRESULT LoadTexture(); //テクスチャをロード
 
 	// Draw関数から呼ばれる関数--------------------
-	void PassDataToCB(DirectX::XMMATRIX& worldMatrix);  //コンス
+	void PassDataToCB(XMMATRIX worldMatrix);	//コンスタントバッファに各種情報を渡す
 	void SetBufferToPipeline();                         //各バッファ
 
 };
