@@ -19,7 +19,7 @@ void Transform::Calclation()
     //
     matTranslate_ = XMMatrixTranslation(position_.x, position_.y, position_.z);
 
-    //‰ñ“]s—ñì¬
+    //
     XMMATRIX rotateX, rotateY, rotateZ;
     rotateX = XMMatrixRotationX(XMConvertToRadians(rotate_.x));
     rotateY = XMMatrixRotationY(XMConvertToRadians(rotate_.y));

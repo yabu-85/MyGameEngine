@@ -5,6 +5,7 @@
 #include "Dice.h"
 #include "Sprite.h"
 #include "Transform.h"
+#include "Fbx.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -71,10 +72,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	pQuad->Initialize();
 
 	Dice* pDice = new Dice;
-	hr = pDice->Initialize();
+	pDice->Initialize();
 
 	Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize();
+	pSprite->Initialize();
+
+	Fbx* pFbx = new Fbx;
+	pFbx->Load("Assets\\oden.fbx");
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -112,6 +116,11 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			spriteTransform.scale_.y = 256.0f / 600.0f;
 			//mat = XMMatrixScaling(512.0f/800.0f, 256.0f/600.0f, 1.0f);
 			pSprite->Draw(spriteTransform);
+			
+			Transform fbxTransform;
+			fbxTransform.position_.y = 3.0f;
+			fbxTransform.rotate_.y = angle;
+			pFbx->Draw(fbxTransform);
 
 			//描画処理
 			Direct3D::EndDraw();
@@ -122,6 +131,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	SAFE_DELETE(pQuad);
 	SAFE_DELETE(pDice);
 	SAFE_DELETE(pSprite);
+	SAFE_DELETE(pFbx);
 
 	Direct3D::Release();
 
