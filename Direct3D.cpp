@@ -259,7 +259,6 @@ HRESULT Direct3D::InitShader2D()
 	{
 		//エラー処理
 		MessageBox(NULL, "ピクセルシェーダの作成に失敗しました", "エラー", MB_OK);
-		//SAFE_RELEASE(pCompilePS);
 		return hr;
 	}
 
