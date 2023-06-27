@@ -68,6 +68,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Camera::Initialize();
 
+	/*
 	Quad* pQuad = new Quad;
 	pQuad->Initialize();
 
@@ -77,6 +78,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	Sprite* pSprite = new Sprite;
 	pSprite->Initialize();
 
+	
+	*/
+	
 	Fbx* pFbx = new Fbx;
 	pFbx->Load("Assets\\oden.fbx");
 
@@ -105,6 +109,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			//XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle)) * XMMatrixTranslation(0,3,0);
 
+			/*
 			Transform diceTransform;
 			diceTransform.position_.y = 3.0f;
 			diceTransform.rotate_.y = angle;
@@ -117,8 +122,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//mat = XMMatrixScaling(512.0f/800.0f, 256.0f/600.0f, 1.0f);
 			pSprite->Draw(spriteTransform);
 			
+			*/
+			
 			Transform fbxTransform;
-			fbxTransform.position_.y = 3.0f;
+			fbxTransform.position_.y = 0.0f;
 			fbxTransform.rotate_.y = angle;
 			pFbx->Draw(fbxTransform);
 
@@ -128,9 +135,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		}
 	}
 	
+	/*
+
 	SAFE_DELETE(pQuad);
 	SAFE_DELETE(pDice);
 	SAFE_DELETE(pSprite);
+
+	*/
+
 	SAFE_DELETE(pFbx);
 
 	Direct3D::Release();

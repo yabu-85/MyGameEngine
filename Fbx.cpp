@@ -1,4 +1,6 @@
 #include "Fbx.h"
+#include "Direct3D.h"
+#include "Camera.h"
 
 Fbx::Fbx():pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr), vertexCount_(0), polygonCount_(0)
 {
@@ -41,7 +43,40 @@ void Fbx::Draw(Transform& transform)
 {
 	Direct3D::SetShader(SHADER_3D);
 	transform.Calclation();//トランスフォームを計算
-	Direct3D::pContext_->DrawIndexed( sizeof(int) * polygonCount_ * 3, 0, 0);
+
+	//----Passdata
+	CONSTANT_BUFFER cb;
+
+	//コンスタントバッファに渡す情報
+	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+
+	//コンスタントバッファの更新
+	D3D11_MAPPED_SUBRESOURCE pdata;
+	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+
+
+	Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
+
+	//---SetBuffer
+	//頂点バッファ
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+	// インデックスバッファーをセット
+	stride = sizeof(int);
+	offset = 0;
+	Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+
+	//コンスタントバッファ
+	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
+	//Draw
+
+	Direct3D::pContext_->DrawIndexed( polygonCount_ * 3, 0, 0);
 
 }
 
