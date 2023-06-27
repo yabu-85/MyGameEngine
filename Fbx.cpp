@@ -2,7 +2,8 @@
 #include "Direct3D.h"
 #include "Camera.h"
 
-Fbx::Fbx():pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr), vertexCount_(0), polygonCount_(0)
+Fbx::Fbx():pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr), vertexCount_(0), polygonCount_(0),
+		materialCount_(0), pMaterialList_(0)
 {
 }
 
@@ -72,7 +73,6 @@ void Fbx::Draw(Transform& transform)
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
 
-
 	Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
 
 	//---SetBuffer
@@ -92,8 +92,15 @@ void Fbx::Draw(Transform& transform)
 		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-		//Draw
+		if (pMaterialList_[i].pTexture)
+		{
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
+			Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
+			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
+		}
 
+		//Draw
 		Direct3D::pContext_->DrawIndexed(polygonCount_ * 3, 0, 0);
 
 	}

@@ -43,6 +43,7 @@ class Fbx
 	ID3D11Buffer** pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 	MATERIAL* pMaterialList_;
+	Texture* pTexture_;
 
 	void IntConstantBuffer(); //コンスタントバッファを作成
 	void InitVertex(fbxsdk::FbxMesh* mesh);
