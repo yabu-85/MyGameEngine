@@ -1,6 +1,5 @@
 #include <Windows.h>
 #include "Direct3D.h"
-#include "Quad.h"
 #include "Camera.h"
 #include "Dice.h"
 #include "Sprite.h"
@@ -14,6 +13,8 @@ const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+Fbx* pFbx;
 
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
@@ -68,21 +69,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Camera::Initialize();
 
-	/*
-	Quad* pQuad = new Quad;
-	pQuad->Initialize();
-
 	Dice* pDice = new Dice;
-	pDice->Initialize();
+	hr = pDice->Initialize();
 
 	Sprite* pSprite = new Sprite;
-	pSprite->Initialize();
-
+	hr = pSprite->Initialize();
 	
-	*/
-	
-	Fbx* pFbx = new Fbx;
-	pFbx->Load("Assets\\oden.fbx");
+	pFbx = new Fbx;
+	pFbx->Load("Assets/Oden.fbx");
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -110,20 +104,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle)) * XMMatrixTranslation(0,3,0);
 
 			/*
-			Transform diceTransform;
-			diceTransform.position_.y = 3.0f;
-			diceTransform.rotate_.y = angle;
-			pDice->Draw(diceTransform);
-
 			////mat = XMMatrixScaling(512.0f / 800.0f, 256.0f / 600.0f, 1.0f);
 			Transform spriteTransform;
 			spriteTransform.scale_.x = 512.0f / 800.0f;
 			spriteTransform.scale_.y = 256.0f / 600.0f;
 			//mat = XMMatrixScaling(512.0f/800.0f, 256.0f/600.0f, 1.0f);
 			pSprite->Draw(spriteTransform);
-			
 			*/
-			
+
 			Transform fbxTransform;
 			fbxTransform.position_.y = 0.0f;
 			fbxTransform.rotate_.y = angle;
@@ -135,15 +123,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		}
 	}
 	
-	/*
-
-	SAFE_DELETE(pQuad);
 	SAFE_DELETE(pDice);
 	SAFE_DELETE(pSprite);
-
-	*/
-
-	SAFE_DELETE(pFbx);
 
 	Direct3D::Release();
 

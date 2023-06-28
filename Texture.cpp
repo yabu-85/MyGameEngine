@@ -16,8 +16,7 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-	SAFE_RELEASE(pSampler_);
-	SAFE_RELEASE(pSRV_);
+	Release();
 }
 
 HRESULT Texture::Load(string fileName)
@@ -68,4 +67,6 @@ HRESULT Texture::Load(string fileName)
 
 void Texture::Release()
 {
+	SAFE_RELEASE(pSampler_);
+	SAFE_RELEASE(pSRV_);
 }
