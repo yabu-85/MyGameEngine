@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "Transform.h"
 #include "Fbx.h"
+#include "Input.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -67,6 +68,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		PostQuitMessage(0); //エラー起きたら強制終了
 	}
 
+	Input::Initialize(hWnd);
+
 	Camera::Initialize();
 
 	Dice* pDice = new Dice;
@@ -98,6 +101,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			//ゲームの処理
 			Direct3D::BeginDraw();
 
+			Input::Update();
+
 			static float angle = 0;
 			angle += 0.05;
 
@@ -125,7 +130,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	
 	SAFE_DELETE(pDice);
 	SAFE_DELETE(pSprite);
-
+	
+	Input::Release();
 	Direct3D::Release();
 
 	return 0;
