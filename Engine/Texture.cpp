@@ -6,9 +6,6 @@
 #pragma comment( lib, "DirectXTex.lib")
 #pragma comment( lib, "WindowsCodecs.lib" )
 
-//最初に簡単にテクスチャいろいろできるライブラリ入れた
-//ツール　NuGetぱっけ　ソリューションの　から [ DirectXTex ]で調べて win10のやつ入れた プロジェクトにチェック入れてインストール
-
 Texture::Texture()
 	:pSampler_(nullptr),pSRV_(nullptr)
 {

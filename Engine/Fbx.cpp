@@ -64,7 +64,6 @@ void Fbx::Draw(Transform& transform)
 
 	for (int i = 0; i < materialCount_; i++)
 	{
-		//----Passdata
 		//コンスタントバッファに渡す情報
 		CONSTANT_BUFFER cb;
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
@@ -169,7 +168,6 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 
 	HRESULT hr;
 	hr = Direct3D::pDevice_->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
-	///ヘッダーしか見てないから見つけられない 対処 Direct3Dヘッダーで書いてるよ
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 

@@ -58,11 +58,7 @@ namespace Input
 	//[||||||||||ƒL[ƒ{[ƒh[|||||||||||||
 	bool IsKey(int keyCode)
 	{
-		//1byte‚Ì’†‚Ì1bit‚¾‚¯flag‚ª‚Ç‚¤‚È‚Á‚Ä‚¢‚é‚©’m‚è‚½‚¢
-		//‘ÎÛ‚¾‚¯‚ª1‚É‚È‚é2i”‚Æ‚ÅAND‰‰ŽZ‚ð‚·‚ê‚Î‘ÎÛ‚¾‚¯‚ª‚Ç‚¤‚È‚Á‚Ä‚¢‚é‚©‚ª‚í‚©‚é
-		//KeyCode‚ÅŽw’è‚µ‚½‚Æ‚±‚ª 8bit‚Ìˆê”Ô¶‚É‚È‚é ‚©‚ç 128 ‚Ì ˆê”Ô¶‚¾‚¯‚P‚É‚È‚é2i”‚Ì’l‚ÅAND‰‰ŽZ‚ð‚·‚é
-
-		if (keyState[keyCode] & 0x80) //128‚ð16i”‚Å=0x80 || 1<<7‚P‚ð¶‚É7‰ñƒVƒtƒg‚µ‚½
+		if (keyState[keyCode] & 0x80) 
 		{
 			return true;
 		}
@@ -71,7 +67,6 @@ namespace Input
 
 	bool IsKeyDown(int keyCode)
 	{
-		//‰Ÿ‚µ‚Ä‚¢‚È‚¢”»’è‚ÆA‰Ÿ‚µ‚Ä‚¢‚é”»’è
 		if (!prevKeyState[keyCode] & 0x80 && IsKey(keyCode))
 		{
 			return true;
@@ -90,7 +85,6 @@ namespace Input
 
 	//[|||||||ƒ}ƒEƒX[|||||||||||
 
-		//ƒ}ƒEƒX‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©’²‚×‚é
 	bool IsMouseButton(int buttonCode)
 	{
 		//‰Ÿ‚µ‚Ä‚é

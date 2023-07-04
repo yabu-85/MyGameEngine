@@ -1,11 +1,8 @@
 #include <Windows.h>
-#include "Direct3D.h"
-#include "Camera.h"
-#include "Dice.h"
-#include "Sprite.h"
-#include "Transform.h"
-#include "Fbx.h"
-#include "Input.h"
+#include "Engine/Direct3D.h"
+#include "Engine/Camera.h"
+#include "Engine/Input.h"
+#include "Engine/RootJob.h"
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
@@ -15,7 +12,7 @@ const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-Fbx* pFbx;
+RootJob* pRootJob = nullptr;
 
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
@@ -72,14 +69,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	Camera::Initialize();
 
-	Dice* pDice = new Dice;
-	hr = pDice->Initialize();
-
-	Sprite* pSprite = new Sprite;
-	hr = pSprite->Initialize();
-	
-	pFbx = new Fbx;
-	pFbx->Load("Assets/Oden.fbx");
+	pRootJob = new RootJob();
+	pRootJob->Initialize();
 
 	//メッセージループ（何か起きるのを待つ）
 	MSG msg;
@@ -96,61 +87,25 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 		//メッセージなし
 		else
 		{
+			//ゲームの処理
+			
 			Camera::Update();
 
-			//ゲームの処理
-			Direct3D::BeginDraw();
+			pRootJob->Update();
 
 			Input::Update();
 
-			static float keyAngle = 0;
-			static float angle = 0;
-			static XMVECTOR mouse = Input::GetMousePosition();
-			static XMVECTOR pushMouse = mouse;
+			Direct3D::BeginDraw();
 
-			if (Input::IsMouseButtonDown(0)) {
-				pushMouse = Input::GetMousePosition();
-			}
-			if (Input::IsMouseButtonUp(0)) {
-				keyAngle = Input::GetMouseMove().x;
-			}
-			mouse = Input::GetMousePosition();
-
-			if (Input::IsMouseButton(0)) {
-				angle = XMVectorGetX(mouse) - XMVectorGetX(pushMouse);
-			}
-			else {
-				angle += keyAngle;
-				if (keyAngle > 0.000f) keyAngle -= 0.001f;
-				else if (keyAngle < 0.000f) keyAngle += 0.001f;
-			
-				if (keyAngle > 0.000f) keyAngle -= 0.001f;
-				else if (keyAngle < 0.000f) keyAngle += 0.001f;
-			}
-
-			/*
-			////mat = XMMatrixScaling(512.0f / 800.0f, 256.0f / 600.0f, 1.0f);
-			Transform spriteTransform;
-			spriteTransform.scale_.x = 512.0f / 800.0f;
-			spriteTransform.scale_.y = 256.0f / 600.0f;
-			//mat = XMMatrixScaling(512.0f/800.0f, 256.0f/600.0f, 1.0f);
-			pSprite->Draw(spriteTransform);
-			*/
-
-			Transform fbxTransform;
-			fbxTransform.position_.y = 0.0f;
-			fbxTransform.rotate_.y = angle;
-			pFbx->Draw(fbxTransform);
+			//ルードジョブからすべてのDraw関数を呼ぶ
 
 			//描画処理
 			Direct3D::EndDraw();
 
 		}
 	}
-	
-	SAFE_DELETE(pDice);
-	SAFE_DELETE(pSprite);
-	
+
+	pRootJob->Release();
 	Input::Release();
 	Direct3D::Release();
 
