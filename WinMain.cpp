@@ -102,10 +102,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::BeginDraw();
 
 			Input::Update();
-			if (Input::IsKeyUp(DIK_ESCAPE))
-			{
-				PostQuitMessage(0);
-			}
 
 			static float angle = 0;
 			static XMVECTOR mouse = Input::GetMousePosition();
