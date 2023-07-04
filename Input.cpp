@@ -4,30 +4,58 @@
 namespace Input
 {
 	//LP～～～～ってなってる型だったら、ポインタだと思っていい
+	//DirectInputオブジェクト
 	LPDIRECTINPUT8   pDInput = nullptr;
-	LPDIRECTINPUTDEVICE8 pKeyDevice = nullptr; //keyを管理するポインタ key, maouse それぞれに必要
-	BYTE keyState[256];        //現在の各キーの状態
-	BYTE prevKeyState[256];    //前フレームでの各キーの状態
-	XMVECTOR mousePosition;
+
+	//キーボード
+	LPDIRECTINPUTDEVICE8 pKeyDevice;		//デバイスオブジェクト
+	BYTE keyState[256]; 					//現在の各キーの状態
+	BYTE prevKeyState[256]; 				//前フレームでの各キーの状態
+
+	//マウス
+	LPDIRECTINPUTDEVICE8 pMouseDevice;	    //デバイスオブジェクト
+	DIMOUSESTATE mouseState;				//マウスの状態
+	DIMOUSESTATE prevMouseState;			//前フレームのマウスの状態
+	XMVECTOR  mousePosition;							//マウスカーソルの位置
 
 	void Initialize(HWND hWnd)
 	{
+		//DirectInput本体
 		DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&pDInput, nullptr);
 
+		//キーボード
 		pDInput->CreateDevice(GUID_SysKeyboard, &pKeyDevice, nullptr);
 		pKeyDevice->SetDataFormat(&c_dfDIKeyboard); //KeyBoardだよってnew してる
-		pKeyDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
+		pKeyDevice->SetCooperativeLevel(NULL, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND); 
+
+		//マウス	
+		pDInput->CreateDevice(GUID_SysMouse, &pMouseDevice, nullptr);
+		pMouseDevice->SetDataFormat(&c_dfDIMouse);
+		pKeyDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND); 
+
 	}
 
 	void Update()
 	{
 		memcpy(prevKeyState, keyState, 256); //メモリーコピー
-
-		//ここでキーボードの状況を保存しているらしい
 		pKeyDevice->Acquire(); //アクワイヤー必ず入れろってやつキーボードを見失ってしまうらしい
-		pKeyDevice->GetDeviceState(sizeof(keyState), &keyState); //これもね
+		pKeyDevice->GetDeviceState(sizeof(keyState), &keyState); //ここでキーボードの状況を保存しているらしい
+	
+		//マウス
+		memcpy(&prevMouseState, &mouseState, sizeof(mouseState));
+		pMouseDevice->Acquire();
+		pMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);
+	
 	}
 
+	void Release()
+	{
+		SAFE_RELEASE(pMouseDevice);
+		SAFE_RELEASE(pKeyDevice);
+		SAFE_RELEASE(pDInput);
+	}
+
+	//ー－－－－－－－－－－キーボードー－－－－－－－－－－－－－
 	bool IsKey(int keyCode)
 	{
 		//1byteの中の1bitだけflagがどうなっているか知りたい
@@ -43,8 +71,8 @@ namespace Input
 
 	bool IsKeyDown(int keyCode)
 	{
-		//押している判定と、押していない判定
-		if (keyState[keyCode] & 0x80 && !prevKeyState[keyCode] & 0x7F)
+		//押していない判定と、押している判定
+		if (!prevKeyState[keyCode] & 0x80 && IsKey(keyCode))
 		{
 			return true;
 		}
@@ -53,8 +81,43 @@ namespace Input
 
 	bool IsKeyUp(int keyCode)
 	{
-		if (!keyState[keyCode] & 0x7F && prevKeyState[keyCode] & 0x80)
+		if (prevKeyState[keyCode] & 0x80 && !IsKey(keyCode))
 		{	
+			return true;
+		}
+		return false;
+	}
+
+	//ー－－－－－－－マウスー－－－－－－－－－－－
+
+		//マウスのボタンが押されているか調べる
+	bool IsMouseButton(int buttonCode)
+	{
+		//押してる
+		if (mouseState.rgbButtons[buttonCode] & 0x80)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	//マウスのボタンを今押したか調べる（押しっぱなしは無効）
+	bool IsMouseButtonDown(int buttonCode)
+	{
+		//今は押してて、前回は押してない
+		if (IsMouseButton(buttonCode) && !(prevMouseState.rgbButtons[buttonCode] & 0x80))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	//マウスのボタンを今放したか調べる
+	bool IsMouseButtonUp(int buttonCode)
+	{
+		//今押してなくて、前回は押してる
+		if (!IsMouseButton(buttonCode) && prevMouseState.rgbButtons[buttonCode] & 0x80)
+		{
 			return true;
 		}
 		return false;
@@ -70,8 +133,11 @@ namespace Input
 		mousePosition = XMVectorSet((float)x, (float)y, 0, 0);
 	}
 
-	void Release()
+	//そのフレームでのマウスの移動量を取得
+	XMFLOAT3 GetMouseMove()
 	{
-		SAFE_RELEASE(pDInput);
+		XMFLOAT3 result = XMFLOAT3((float)mouseState.lX, (float)mouseState.lY, (float)mouseState.lZ);
+		return result;
 	}
+
 }

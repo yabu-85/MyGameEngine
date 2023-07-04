@@ -103,17 +103,29 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 			Input::Update();
 
+			static float keyAngle = 0;
 			static float angle = 0;
 			static XMVECTOR mouse = Input::GetMousePosition();
 			static XMVECTOR pushMouse = mouse;
 
-			if (Input::IsKeyDown(DIK_SPACE)) {
+			if (Input::IsMouseButtonDown(0)) {
 				pushMouse = Input::GetMousePosition();
+			}
+			if (Input::IsMouseButtonUp(0)) {
+				keyAngle = Input::GetMouseMove().x;
 			}
 			mouse = Input::GetMousePosition();
 
-			if (Input::IsKey(DIK_SPACE) && (XMVectorGetX(mouse) != XMVectorGetX(pushMouse)) ) {
+			if (Input::IsMouseButton(0)) {
 				angle = XMVectorGetX(mouse) - XMVectorGetX(pushMouse);
+			}
+			else {
+				angle += keyAngle;
+				if (keyAngle > 0.000f) keyAngle -= 0.001f;
+				else if (keyAngle < 0.000f) keyAngle += 0.001f;
+			
+				if (keyAngle > 0.000f) keyAngle -= 0.001f;
+				else if (keyAngle < 0.000f) keyAngle += 0.001f;
 			}
 
 			/*
