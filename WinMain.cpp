@@ -102,11 +102,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 			Direct3D::BeginDraw();
 
 			Input::Update();
+			if (Input::IsKeyUp(DIK_ESCAPE))
+			{
+				PostQuitMessage(0);
+			}
 
 			static float angle = 0;
-			angle += 0.05;
+			static XMVECTOR mouse = Input::GetMousePosition();
+			static XMVECTOR pushMouse = mouse;
 
-			//XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle)) * XMMatrixTranslation(0,3,0);
+			if (Input::IsKeyDown(DIK_SPACE)) {
+				pushMouse = Input::GetMousePosition();
+			}
+			mouse = Input::GetMousePosition();
+
+			if (Input::IsKey(DIK_SPACE) && (XMVectorGetX(mouse) != XMVectorGetX(pushMouse)) ) {
+				angle = XMVectorGetX(mouse) - XMVectorGetX(pushMouse);
+			}
 
 			/*
 			////mat = XMMatrixScaling(512.0f / 800.0f, 256.0f / 600.0f, 1.0f);
@@ -142,6 +154,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
+	case WM_MOUSEMOVE:
+		Input::SetMousePosition(LOWORD(lParam), HIWORD(lParam));
+		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);  //ÉvÉçÉOÉâÉÄèIóπ
 		return 0;
