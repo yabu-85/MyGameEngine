@@ -1,13 +1,14 @@
 #pragma once
-#include "Engine/RootJob.h"
 #include "Engine/GameObject.h"
 
+class Fbx;
 
-class PlayScene : public GameObject
+class Player : public GameObject
 {
+    Fbx* pFbx;
 public:
-    PlayScene(GameObject* parent);
-    ~PlayScene();
+    Player(GameObject* parent);
+    ~Player();
     void Initialize() override;
     void Update() override;
     void Draw() override;

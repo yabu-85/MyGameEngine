@@ -25,4 +25,15 @@ public:
 	virtual void Draw() = 0;
 	virtual void Release() = 0;
 
+	void DrawSub();
+	void UpdateSub();
+
+	template <class T>
+	void Instantiate(GameObject* parent)
+	{
+		T* p;
+		p = new T(parent);
+		p->Initialize();
+		parent->childList_.push_back(p);
+	}
 };
