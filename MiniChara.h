@@ -1,15 +1,15 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include "MiniChara.h"
 
 class Fbx;
 
-class Player : public GameObject
+class MiniChara : public GameObject
 {
-    Fbx* pFbx;
+    Fbx* pFbx_;
+
 public:
-    Player(GameObject* parent);
-    ~Player();
+    MiniChara(GameObject* parent);
+    ~MiniChara();
     void Initialize() override;
     void Update() override;
     void Draw() override;
