@@ -14,11 +14,15 @@ protected:
 	Transform				transform_;
 	GameObject*				pParent_;
 	string					objectName_;
+	bool					dead_;
 
 public:
 	GameObject();
 	GameObject(GameObject* parent, const std::string& name);
 	~GameObject();
+
+	void KillMe() { dead_ = true; };
+	bool IsDead() { return (dead_ != false); };
 
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
@@ -27,6 +31,7 @@ public:
 
 	void DrawSub();
 	void UpdateSub();
+	void ReleaseSub();
 
 	template <class T>
 	void Instantiate(GameObject* parent)
