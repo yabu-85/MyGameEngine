@@ -51,10 +51,12 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-	float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
+	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0); //色
+	float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);//環境光
+
 	float4 diffuse;
 	float4 ambient;
+	
 	if (isTextured == false) {
 		//テクスチャなし
 		diffuse = lightSource * diffuseColor * inData.color;

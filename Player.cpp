@@ -17,16 +17,13 @@ void Player::Initialize()
 {
 	pFbx = new Fbx;
 	pFbx->Load("Assets/oden.fbx");
-	this->transform_.scale_.x = 0.5f;
 
 	Instantiate<MiniChara>(this);
+	GameObject* pco2 = Instantiate<MiniChara>(this);
+	pco2->SetTransformPos(XMFLOAT3(-2.0, 1.0f, 0));
 
-	std::list<std::pair<int, string>> a = {
-		{1,"stringA"},
-		{2,"stringB"},
-	};
-
-	std::vector<float> vec = { 1,2,3,4,5 };
+	pco2 = nullptr;
+	delete pco2;
 }
 
 void Player::Update()
@@ -34,6 +31,8 @@ void Player::Update()
 	transform_.rotate_.y++;
 
 	if (Input::IsKey(DIK_SPACE)) KillMe();
+	if (Input::IsKey(DIK_A)) transform_.position_.x += 0.1f;
+	if (Input::IsKey(DIK_D)) transform_.position_.x -= 0.1f;
 }
 
 void Player::Draw()
@@ -43,6 +42,4 @@ void Player::Draw()
 
 void Player::Release()
 {
-	pFbx->Release();
-	delete pFbx;
 }

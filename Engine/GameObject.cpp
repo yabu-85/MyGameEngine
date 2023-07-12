@@ -3,7 +3,7 @@
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 
 GameObject::GameObject():
-	pParent_(nullptr), dead_(false)
+	pParent_(nullptr), objectName_(""), dead_(false)
 {
 }
 
@@ -12,6 +12,9 @@ GameObject::GameObject(GameObject* parent, const std::string& name):
 {
 	childList_.clear();
 	transform_ = parent->transform_;
+
+	if (pParent_ != nullptr)
+		this->transform_.pParent_ = &(parent->transform_);
 
 }
 

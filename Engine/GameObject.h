@@ -24,6 +24,9 @@ public:
 	void KillMe() { dead_ = true; };
 	bool IsDead() { return (dead_ != false); };
 
+	void SetTransform(Transform t) { transform_ = t; };
+	void SetTransformPos(XMFLOAT3 t) { transform_.position_ = t; };
+
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
@@ -34,11 +37,12 @@ public:
 	void ReleaseSub();
 
 	template <class T>
-	void Instantiate(GameObject* parent)
+	T* Instantiate(GameObject* parent)
 	{
 		T* p;
 		p = new T(parent);
 		p->Initialize();
 		parent->childList_.push_back(p);
+		return p;
 	}
 };

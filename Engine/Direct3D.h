@@ -10,7 +10,6 @@
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 #define SAFE_RELEASE(p) if(p != nullptr){ p->Release(); p = nullptr;}
 
-
 //‚±‚ê enumƒNƒ‰ƒX‚É‚µ‚ÄŒ©‚¦‚È‚¢‚æ‚¤‚É‚·‚é‚Ì‚ª³‰ğ
 enum SHADER_TYPE {
 	SHADER_2D,

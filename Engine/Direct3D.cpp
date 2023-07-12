@@ -280,8 +280,6 @@ HRESULT Direct3D::InitShader2D()
 		return hr;
 	}
 
-	//SAFE_RELEASE(pCompilePS);
-
 	//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
 	rdc.CullMode = D3D11_CULL_BACK;

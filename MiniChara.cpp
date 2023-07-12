@@ -1,5 +1,6 @@
 #include "MiniChara.h"
 #include "Engine/Fbx.h"
+#include "Engine/Input.h"
 
 MiniChara::MiniChara(GameObject* parent):
 	GameObject(parent, "MiniChara"), pFbx_(nullptr)
@@ -20,10 +21,16 @@ void MiniChara::Initialize()
 	transform_.scale_.z = 0.2f;
 
 	transform_.position_.x = 2.0f;
+	transform_.position_.y = 1.0f;
+
 }
 
 void MiniChara::Update()
 {
+
+	if (Input::IsKey(DIK_F)) KillMe();
+	if (Input::IsKey(DIK_W)) transform_.position_.x += 0.1f;
+	if (Input::IsKey(DIK_S)) transform_.position_.x -= 0.1f;
 }
 
 void MiniChara::Draw()
@@ -33,7 +40,4 @@ void MiniChara::Draw()
 
 void MiniChara::Release()
 {
-	pFbx_->Release();
-	delete pFbx_;
 }
-
