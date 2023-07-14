@@ -1,12 +1,10 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include "MiniChara.h"
-
-class Fbx;
 
 class Player : public GameObject
 {
-    Fbx* pFbx;
+    int hModel_;
+
 public:
     Player(GameObject* parent);
     ~Player();

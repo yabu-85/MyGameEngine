@@ -53,7 +53,6 @@ void GameObject::UpdateSub()
 
 void GameObject::ReleaseSub()
 {
-
 	for (auto it = childList_.begin(); it != childList_.end(); it++)
 	{
 		(*it)->ReleaseSub();

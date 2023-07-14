@@ -25,7 +25,7 @@ public:
 	bool IsDead() { return (dead_ != false); };
 
 	void SetTransform(Transform t) { transform_ = t; };
-	void SetTransformPos(XMFLOAT3 t) { transform_.position_ = t; };
+	void SetPosition(XMFLOAT3 t) { transform_.position_ = t; };
 
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;

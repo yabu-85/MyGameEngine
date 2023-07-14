@@ -1,11 +1,9 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-class Fbx;
-
 class MiniChara : public GameObject
 {
-    Fbx* pFbx_;
+    int hModel_;
 
 public:
     MiniChara(GameObject* parent);
