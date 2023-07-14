@@ -14,6 +14,8 @@ cbuffer global
 	float4x4	matNormal;      // ワールド行列
 	float4		diffuseColor;	// ディフューズカラー（マテリアルの色）
 	bool		isTextured;		// テクスチャ貼ってあるかどうか
+	
+	float4		lightPos;			//どの方向から光が当たるか　テスト
 };
 
 //───────────────────────────────────────
@@ -31,6 +33,8 @@ struct VS_OUT
 //───────────────────────────────────────
 VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 {
+	//ポイントライトの座標引くピクセルの座標と法線の角度を求めるそれ colorに入れる
+
 	//ピクセルシェーダーへ渡す情報
 	VS_OUT outData;
 
@@ -38,7 +42,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	outData.uv = uv;
 
 	normal = mul(normal, matNormal);
+
 	float4 light = float4(1, 0.8, -0.3, 0);
+	
 	light = normalize(light);
 	outData.color = clamp(dot(normal, light), 0, 1);
 

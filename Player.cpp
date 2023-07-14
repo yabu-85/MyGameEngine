@@ -21,7 +21,7 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	transform_.rotate_.y++;
+	//transform_.rotate_.y++;
 	
 	if (Input::IsKeyUp(DIK_SPACE)) {
 		GameObject* pBullet = Instantiate<MiniChara>(pParent_);
