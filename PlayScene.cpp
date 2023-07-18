@@ -1,8 +1,8 @@
 #include "PlayScene.h"
-#include "Engine/Fbx.h"
 #include "Player.h"
 
 PlayScene::PlayScene(GameObject* parent)
+	:GameObject(parent, "PlayScene")
 {
 }
 
