@@ -1,7 +1,8 @@
 #include "SceneManager.h"
+#include "Model.h"
+
 #include "../TestScene.h"
 #include "../PlayScene.h"
-#include "Model.h"
 
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 

@@ -1,5 +1,6 @@
 #include "TestScene.h"
-#include "Player.h"
+#include "Engine/SceneManager.h"
+#include "Engine/Input.h"
 
 TestScene::TestScene(GameObject* parent)
 	:GameObject(parent, "TestSecene")
@@ -8,12 +9,17 @@ TestScene::TestScene(GameObject* parent)
 
 void TestScene::Initialize()
 {
-	Instantiate<Player>(this);
-
+	
 }
 
 void TestScene::Update()
 {
+	if (Input::IsKey(DIK_SPACE)) {
+		//今回はSceneManagerだって確定しているからいいけどダウンキャストはしないようにしよう
+		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
+		pSceneManager->ChanegeScene(SCENE_ID_PLAY);
+
+	}
 }
 
 void TestScene::Draw()

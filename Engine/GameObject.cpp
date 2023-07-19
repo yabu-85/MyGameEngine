@@ -11,7 +11,6 @@ GameObject::GameObject(GameObject* parent, const std::string& name):
 	pParent_(parent), objectName_(name), dead_(false)
 {
 	childList_.clear();
-	transform_ = parent->transform_;
 
 	if (pParent_ != nullptr)
 		this->transform_.pParent_ = &(parent->transform_);
@@ -60,4 +59,33 @@ void GameObject::ReleaseSub()
 	}
 
 	Release();
+}
+
+GameObject* GameObject::FindChildObject(string _objName)
+{
+	if (_objName == this->objectName_) {
+		return (this); //Ž©•ª‚ª_objName‚¾‚Á‚½
+	}
+	else {
+		for (auto itr = childList_.begin(); itr != childList_.end(); itr++) {
+			GameObject* obj = (*itr)->FindChildObject(_objName);
+			if (obj != nullptr)
+				return obj;
+		}
+	}
+	return nullptr;
+}
+
+//RootJob‚É‚½‚Ç‚è’…‚­‚Ü‚ÅÄ‹NŒÄ‚Ño‚µ‚µ‚Ä’T‚µ‚Ä‚é
+GameObject* GameObject::GetRootJob()
+{
+	if (pParent_ == nullptr)
+		return this;
+
+	return pParent_->GetRootJob();
+}
+
+GameObject* GameObject::FindObject(string _objName)
+{
+	return GetRootJob()->FindChildObject(_objName);
 }

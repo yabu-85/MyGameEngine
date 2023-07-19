@@ -21,20 +21,21 @@ public:
 	GameObject(GameObject* parent, const std::string& name);
 	~GameObject();
 
-	void KillMe() { dead_ = true; };
-	bool IsDead() { return (dead_ != false); };
-
-	void SetTransform(Transform t) { transform_ = t; };
-	void SetPosition(XMFLOAT3 t) { transform_.position_ = t; };
-
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 	virtual void Release() = 0;
-
 	void DrawSub();
 	void UpdateSub();
 	void ReleaseSub();
+
+	void KillMe() { dead_ = true; };
+	bool IsDead() { return (dead_ != false); };
+	void SetTransform(Transform _t) { transform_ = _t; };
+	void SetPosition(XMFLOAT3 _t) { transform_.position_ = _t; };
+	GameObject* FindChildObject(string _objName);
+	GameObject* GetRootJob();
+	GameObject* FindObject(string _objName);
 
 	template <class T>
 	T* Instantiate(GameObject* parent)
@@ -42,7 +43,7 @@ public:
 		T* p;
 		p = new T(parent);
 		p->Initialize();
-		parent->childList_.push_back(p);
+		childList_.push_back(p);
 		return p;
 	}
 };
