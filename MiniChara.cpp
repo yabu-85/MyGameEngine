@@ -1,6 +1,7 @@
 #include "MiniChara.h"
 #include "Engine/Input.h"
 #include "Engine/Model.h"
+#include "Engine/SphereCollider.h"
 
 MiniChara::MiniChara(GameObject* parent):
 	GameObject(parent, "MiniChara"), hModel_(-1)
@@ -18,6 +19,9 @@ void MiniChara::Initialize()
 	transform_.scale_.x = 0.2f;
 	transform_.scale_.y = 0.2f;
 	transform_.scale_.z = 0.2f;
+
+	SphereCollider* col = new SphereCollider(1.0);
+	AddCollider(col);
 }
 
 void MiniChara::Update()

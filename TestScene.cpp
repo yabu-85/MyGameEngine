@@ -14,7 +14,7 @@ void TestScene::Initialize()
 
 void TestScene::Update()
 {
-	if (Input::IsKey(DIK_SPACE)) {
+	if (Input::IsKey(DIK_W)) {
 		//今回はSceneManagerだって確定しているからいいけどダウンキャストはしないようにしよう
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChanegeScene(SCENE_ID_PLAY);

@@ -1,14 +1,15 @@
 #include "GameObject.h"
+#include "SphereCollider.h"
 
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 
 GameObject::GameObject():
-	pParent_(nullptr), objectName_(""), dead_(false)
+	pParent_(nullptr), objectName_(""), dead_(false), pCollider_(nullptr)
 {
 }
 
 GameObject::GameObject(GameObject* parent, const std::string& name):
-	pParent_(parent), objectName_(name), dead_(false)
+	pParent_(parent), objectName_(name), dead_(false), pCollider_(nullptr)
 {
 	childList_.clear();
 
@@ -31,6 +32,8 @@ void GameObject::DrawSub()
 void GameObject::UpdateSub()
 {
 	Update();
+
+	RoundRobin(GetRootJob());
 
 	for (auto it = childList_.begin(); it != childList_.end();)
 	{
@@ -88,4 +91,43 @@ GameObject* GameObject::GetRootJob()
 GameObject* GameObject::FindObject(string _objName)
 {
 	return GetRootJob()->FindChildObject(_objName);
+}
+
+void GameObject::AddCollider(SphereCollider* pCollider)
+{
+	pCollider_ = pCollider;
+}
+
+void GameObject::Collision(GameObject* pTarget)
+{
+	//ターゲットコライダーがアタッチされていない
+	if (pTarget == this && pTarget->pCollider_ == nullptr)
+		return;
+	
+	float dist = (transform_.position_.x - pTarget->transform_.position_.x) * (transform_.position_.x - pTarget->transform_.position_.x) +
+		(transform_.position_.y - pTarget->transform_.position_.y) * (transform_.position_.y - pTarget->transform_.position_.y) +
+		(transform_.position_.z - pTarget->transform_.position_.z) * (transform_.position_.z - pTarget->transform_.position_.z);
+
+	float rDist = (this->pCollider_->GetRadius() + pCollider_->GetRadius()) * (this->pCollider_->GetRadius() + pCollider_->GetRadius());
+
+	//当たった
+	if (dist <= rDist) {
+		//Oncollision
+		int a = 0;
+	}
+
+}
+
+void GameObject::RoundRobin(GameObject* pTarget)
+{
+ 	if (pCollider_ == nullptr)
+		return;
+
+	//自分とターゲット
+	if (pTarget->pCollider_ != nullptr)
+		Collision(pTarget);
+
+	for(auto itr = pTarget->childList_.begin(); itr != pTarget->childList_.end(); itr++)
+		RoundRobin(*itr);
+
 }
