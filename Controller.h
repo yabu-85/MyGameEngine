@@ -1,16 +1,19 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-class Enemy : public GameObject
+class Controller :
+    public GameObject
 {
-    int hModel_;
+    XMFLOAT3 cameraPos_;
+    XMFLOAT3 cameraTar_;
 
 public:
-    Enemy(GameObject* parent);
-    ~Enemy();
+    Controller(GameObject* parent);
+    ~Controller();
     void Initialize() override;
     void Update() override;
     void Draw() override;
     void Release() override;
+
 };
 

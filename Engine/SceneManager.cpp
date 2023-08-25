@@ -2,7 +2,6 @@
 #include "Model.h"
 
 #include "../TestScene.h"
-#include "../PlayScene.h"
 
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 
@@ -39,9 +38,6 @@ void SceneManager::Update()
 		switch (nextSceneID_) {
 		case SCENE_ID_TEST:
 			Instantiate<TestScene>(this);
-			break;
-		case SCENE_ID_PLAY:
-			Instantiate<PlayScene>(this);
 			break;
 		}
 		currentSceneID_ = nextSceneID_;
