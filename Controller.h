@@ -4,8 +4,6 @@
 class Controller :
     public GameObject
 {
-    XMFLOAT3 cameraPos_;
-    XMFLOAT3 cameraTar_;
 
 public:
     Controller(GameObject* parent);
