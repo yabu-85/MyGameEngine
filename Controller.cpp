@@ -19,48 +19,52 @@ void Controller::Initialize()
 
 void Controller::Update()
 {
-	if (Input::IsKey(DIK_A))
+	if (Input::IsKey(DIK_LEFTARROW))
 	{
 		transform_.rotate_.y -= 1.0f;
-
 	}
-	if (Input::IsKey(DIK_D))
+	if (Input::IsKey(DIK_RIGHTARROW))
 	{
 		transform_.rotate_.y += 1.0f;
-
 	}
 
 	XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
-	XMVECTOR vMove = { 0.0f, 0.0f, 0.1f, 0.0f };
+	XMVECTOR vCam = { 0, 5, -10, 0 };
+	XMVECTOR vMove = XMVectorSet(0.0f, 0.0f, 0.1, 0.0f);
 	CXMMATRIX mRotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
-	CXMMATRIX mRotX = XMMatrixRotationX(XMConvertToRadians(30));
 	vMove = XMVector3TransformCoord(vMove, mRotY);
 	XMFLOAT3 fMove;
 	XMStoreFloat3(&fMove, vMove);
+	XMVECTOR vCamTransformed = XMVector3TransformCoord(vCam, mRotY);
 
 	if (Input::IsKey(DIK_W))
 	{
 		vPos += vMove;
-		XMStoreFloat3(&transform_.position_, vPos);
 	}
-
 	if (Input::IsKey(DIK_S))
 	{
 		vPos -= vMove;
-		XMStoreFloat3(&transform_.position_, vPos);
+	}
+	if (Input::IsKey(DIK_A))
+	{
+		vPos += XMVector3Cross(vMove, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	}
+	if (Input::IsKey(DIK_D))
+	{
+		vPos -= XMVector3Cross(vMove, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	}
 
-	XMVECTOR vCam = { 0, 5, -10, 0 };
-	vCam = XMVector3TransformCoord(vCam, mRotY);
+	XMStoreFloat3(&transform_.position_, vPos);
+
 	XMFLOAT3 camPos;
-	XMStoreFloat3(&camPos, vPos + vCam);
+	XMStoreFloat3(&camPos, vPos + vCamTransformed);
 	Camera::SetPosition(camPos);
 
-	XMFLOAT3 camTar = transform_.position_;
-	camTar = { camTar.x + fMove.x, camTar.y, camTar.z + fMove.z };
+	XMFLOAT3 camTar = { transform_.position_.x + fMove.x, 0.0f, transform_.position_.z + fMove.z };
 	Camera::SetTarget(camTar);
-
 }
+
+
 
 void Controller::Draw()
 {
