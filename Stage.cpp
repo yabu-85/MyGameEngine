@@ -10,7 +10,7 @@ Stage::Stage(GameObject* parent)
 
     for (int x = 0; x < XSIZE; x++) {
         for (int z = 0; z < ZSIZE; z++) {
-            table_[x][z] = 0;
+            table_[x][z] = { DEFAULT, 1 };
         }
     }
 
@@ -39,7 +39,8 @@ void Stage::Initialize()
 
     for (int y = 0; y < ZSIZE; y++) {
         for (int x = 0; x < XSIZE; x++) {
-            table_[x][y] = (int)(x + y / 3);
+            SetBlockType(x, y, (BLOCKTYPE)(rand() % (int)TYPEMAX));
+            SetBlockHeight(x, y, rand() % 10);
         }
     }
 
@@ -58,19 +59,33 @@ void Stage::Draw()
     {
         for (int z = 0; z < ZSIZE; z++)
         {
-            blockTrans.position_.x = (float)x;
-            blockTrans.position_.z = (float)z;
+            for (int y = 0; y < table_[x][z].height_ ; y++)
+            {
+                blockTrans.position_.x = (float)x;
+                blockTrans.position_.y = (float)y;
+                blockTrans.position_.z = (float)z;
 
-            int type = table_[x][z];
+                int type = table_[x][z].type_;
 
-            //ƒ‚ƒfƒ‹•`‰æ
-            Model::SetTransform(hModel_[type], blockTrans);
-            Model::Draw(hModel_[type]);
+                //ƒ‚ƒfƒ‹•`‰æ
+                Model::SetTransform(hModel_[type], blockTrans);
+                Model::Draw(hModel_[type]);
+
+            }
         }
     }
-
 }
 
 void Stage::Release()
 {
+}
+
+void Stage::SetBlockType(int _x, int _z, BLOCKTYPE _type)
+{
+    table_[_x][_z].type_ = _type;
+}
+
+void Stage::SetBlockHeight(int _x, int _z, int _height)
+{
+    table_[_x][_z].height_ = _height;
 }

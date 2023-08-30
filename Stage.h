@@ -5,12 +5,15 @@ namespace {
     const int MODEL_NUM{ 5 };
     const int XSIZE{ 15 };
     const int ZSIZE{ 15 };
+    const int YSIZE{ 15 }; //これMAXの値
+
     enum BLOCKTYPE {
         DEFAULT = 0,
         BRICK,
         GRASS,
         SAND,
         WATER,
+        TYPEMAX,
     };
 }
 
@@ -18,7 +21,14 @@ class Stage :
     public GameObject
 {
     int hModel_[MODEL_NUM];    //モデル番号
-    int table_[XSIZE][ZSIZE];      //モデルのテーブル
+    
+    struct {
+        BLOCKTYPE type_;
+        int height_;
+    }table_[XSIZE][ZSIZE];
+
+    void SetBlockType(int _x, int _z, BLOCKTYPE _type);
+    void SetBlockHeight(int _x, int _z, int _height);
 
 public:
     Stage(GameObject* parent);
