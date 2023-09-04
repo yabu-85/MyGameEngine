@@ -16,6 +16,16 @@ using std::vector;
 
 class Texture;
 
+struct RayCastData
+{
+	XMFLOAT3 start;
+	XMFLOAT3 dir;
+	bool hit;
+	float dist;
+
+	RayCastData() { dist = 0.0f; };
+};
+
 class Fbx
 {
 	struct CONSTANT_BUFFER
@@ -41,7 +51,10 @@ class Fbx
 		Texture* pTexture;
 		XMFLOAT4	diffuse;
 	};
-	
+
+	VERTEX* pVertices_;
+	int** ppIndex_;
+
 	int vertexCount_;	//頂点数
 	int polygonCount_;	//ポリゴン数
 	int materialCount_;	//マテリアルの個数
@@ -63,5 +76,7 @@ public:
 	HRESULT Load(std::string fileName);
 	void Draw(Transform& transform);
 	void Release();
+
+	void RayCast(RayCastData* rayData);
 
 };

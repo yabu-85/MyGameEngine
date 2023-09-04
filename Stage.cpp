@@ -40,7 +40,7 @@ void Stage::Initialize()
     for (int y = 0; y < ZSIZE; y++) {
         for (int x = 0; x < XSIZE; x++) {
             SetBlockType(x, y, (BLOCKTYPE)(rand() % (int)TYPEMAX));
-            SetBlockHeight(x, y, rand() % 10);
+            SetBlockHeight(x, y, rand() % 3 -1);
         }
     }
 

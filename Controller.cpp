@@ -1,6 +1,7 @@
 #include "Controller.h"
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
+#include "Engine/Fbx.h"
 
 Controller::Controller(GameObject* parent)
 	:GameObject(parent, "Controller")
@@ -13,8 +14,8 @@ Controller::~Controller()
 
 void Controller::Initialize()
 {
-	transform_.position_.x = 7.5f;
-	transform_.position_.z = 5.0f;
+	transform_.position_.x = 0.5f;
+	transform_.position_.z = 0.0f;
 	transform_.rotate_.x = 0.0f;
 }
 
@@ -47,6 +48,12 @@ void Controller::Update()
 	XMMATRIX mRotateX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 	XMMATRIX mRotate = mRotateX * mRotateY;
 	vMove = XMVector3TransformCoord(vMove, mRotate);
+	//ã‰º‚ÌˆÚ“®‚³‚¹‚½‚­‚È‚¢‚©‚çXMFLOAT3‚É‚µ‚Ä‚™‚ð‚O‚É‚µ‚Ä‚©‚çNormalize‚µ‚Ä‘ã“ü‚µ‚Ä‚é
+	XMFLOAT3 fMove;
+	XMStoreFloat3(&fMove, vMove);
+	fMove.y = 0;
+	vMove = XMLoadFloat3(&fMove);
+	vMove = XMVector3Normalize(vMove) * 0.1f;
 
 	if (Input::IsKey(DIK_W))
 	{
@@ -64,10 +71,38 @@ void Controller::Update()
 	{
 		vPos -= XMVector3Cross(vMove, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 	}
-
+	//‚±‚±ˆÚ“®‚µ‚Ä‚é
 	XMStoreFloat3(&transform_.position_, vPos);
+
+	//ã‰º‚ÌˆÚ“®
+	if (Input::IsKey(DIK_F))
+	{
+		transform_.position_.y += 0.2f;
+	}
+	if (Input::IsKey(DIK_E))
+	{
+		transform_.position_.y -= 0.2f;
+	}
+
 	vCam = XMVector3Transform(vCam, mRotate);
-	Camera::SetPosition(vPos + vCam);
+	XMFLOAT3 cameraPos;
+	XMStoreFloat3(&cameraPos, vPos + vCam);
+
+	//RayCast
+	if (Input::IsKey(DIK_SPACE)) {
+		RayCastData data;
+		data.start = XMFLOAT3(0, 10, 0);   //ƒŒƒC‚Ì”­ŽËˆÊ’u
+		data.dir = XMFLOAT3(0,-1,0);       //ƒŒƒC‚Ì•ûŒü
+
+		RayCastData a;
+		Fbx* pFbx = new Fbx;
+		pFbx->Fbx::RayCast(&a);
+
+		if (data.hit) transform_.position_.z += 0.1f;
+
+	}
+
+	Camera::SetPosition(cameraPos);
 	Camera::SetTarget(transform_.position_);
 
 }
