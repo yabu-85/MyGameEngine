@@ -17,4 +17,5 @@ namespace Model {
 	void Release();
 
 	void RayCast(int hModel, RayCastData& rayData);
+
 }
