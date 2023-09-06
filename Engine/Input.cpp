@@ -1,5 +1,6 @@
 #include "Input.h"
 #include <DirectXMath.h> //XMVECTOR を使うためのやつ
+#include <string>
 
 namespace Input
 {
@@ -16,7 +17,7 @@ namespace Input
 	LPDIRECTINPUTDEVICE8 pMouseDevice;	    //デバイスオブジェクト
 	DIMOUSESTATE mouseState;				//マウスの状態
 	DIMOUSESTATE prevMouseState;			//前フレームのマウスの状態
-	XMVECTOR  mousePosition;							//マウスカーソルの位置
+	XMFLOAT3  mousePosition;							//マウスカーソルの位置
 
 	void Initialize(HWND hWnd)
 	{
@@ -117,14 +118,17 @@ namespace Input
 		return false;
 	}
 
-	XMVECTOR GetMousePosition()
+	XMFLOAT3 GetMousePosition()
 	{
 		return mousePosition;
 	}
 
 	void SetMousePosition(int x, int y)
 	{
-		mousePosition = XMVectorSet((float)x, (float)y, 0, 0);
+		mousePosition.x = x;
+		mousePosition.y = y;
+		std::string resStr = std::to_string(x) + "," + std::to_string(y) + "\n";
+		OutputDebugString(resStr.c_str());
 	}
 
 	//そのフレームでのマウスの移動量を取得

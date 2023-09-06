@@ -1,6 +1,8 @@
 #include "Stage.h"
 #include "Engine/Model.h"
 #include <string>
+#include "Engine/Direct3D.h"
+#include "Engine/Input.h"
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage")
@@ -48,6 +50,40 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
+    float w = (float)(Direct3D::scrWidht) / 2;
+    float h = (float)(Direct3D::scrHeight) / 2;
+    //Offsetx,y は０
+    //minZ = 0, maxZ = 1
+
+    XMMATRIX vp = {
+        w, 0, 0, 0,
+        0, -w, 0, 0,
+        0, 0, 1, 0,
+        w, h, 0, 1
+    };
+
+    //ビューポート
+    XMMATRIX invVp = XMMatrixInverse(nullptr, vp);
+    
+    //プロジェクション変換
+    XMMATRIX invPrj = {};
+
+    //ビュー変換
+    XMMATRIX invView = {};
+    
+    XMFLOAT3 mousePosFront = Input::GetMousePosition(); //マウスぽじげっと
+    mousePosFront.z = 0.0f;
+
+    XMFLOAT3 mousePosBack = {}; //ごにょ
+    mousePosBack.z = 1.0f;
+    
+    //1: mousePosFrontをベクトルに変換
+    //2: ①にinvVP、invPrj、invViewをかける
+    //3: mousePosBackをベクトルに変換
+    //4 ③にinvVP、invPrj、invViewをかける
+    //5: ②から④に向かってレイを打つ（とりあえずモデル番号は0で
+    //6: レイが当たったらブレイクポイントで止める
+
 }
 
 void Stage::Draw()

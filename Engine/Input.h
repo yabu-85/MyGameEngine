@@ -24,7 +24,7 @@ namespace Input
 	bool IsMouseButtonDown(int buttonCode);
 	bool IsMouseButtonUp(int buttonCode);
 
-	XMVECTOR GetMousePosition();
+	XMFLOAT3 GetMousePosition();
 	void SetMousePosition(int x, int y);
 	XMFLOAT3 GetMouseMove();
 };

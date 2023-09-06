@@ -22,6 +22,7 @@ namespace Direct3D
 	//外部にこれ作ってるよって宣言 extern えくすたーｎ
 	extern ID3D11Device* pDevice_; //デバイス
 	extern ID3D11DeviceContext* pContext_; //デバイスコンテキスト
+	extern int scrWidht, scrHeight;
 
 	//初期化
 	HRESULT Initialize(int winW, int winH, HWND hWnd);
