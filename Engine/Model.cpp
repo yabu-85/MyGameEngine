@@ -1,11 +1,11 @@
-#include "Model.h"
+﻿#include "Model.h"
 
 #define SAFE_DELETE(p) if(p != nullptr){ delete p; p = nullptr;}
 
-//3D���f���iFBX�t�@�C���j���Ǘ�����
+//3Dモデル（FBXファイル）を管理する
 namespace Model
 {
-	//���[�h�ς݂̃��f���f�[�^�ꗗ
+	//ロード済みのモデルデータ一覧
 	std::vector<ModelData*> modelList;
 
 }
@@ -16,7 +16,7 @@ int Model::Load(std::string fileName) {
 	pData->filename_ = fileName;
 	pData->pFbx_ = nullptr;
 
-	//�t�@�C���l�[����������������A�ǂ܂Ȃ�
+	//ファイルネームが同じだったら、読まない
 	for (auto e : modelList) {
 		if (e->filename_ == fileName) {
 			pData->pFbx_ = e->pFbx_;
@@ -33,7 +33,7 @@ int Model::Load(std::string fileName) {
 	modelList.push_back(pData);
 
 	return (modelList.size() - 1);
-	//�ǂݍ��񂾃��f���̃��f���ԍ���Ԃ�
+	//読み込んだモデルのモデル番号を返す
 
 }
 
@@ -48,7 +48,7 @@ void Model::Draw(int hModel) {
 
 void Model::Release()
 {
-	bool isReffered = false; //�Q�Ƃ���Ă�H
+	bool isReffered = false; //参照されてる？
 	for (int i = 0; i < modelList.size(); i++) {
 		for (int j = i + 1; j < modelList.size(); j++) {
 			if (modelList[i]->pFbx_ == modelList[j]->pFbx_) {
@@ -69,5 +69,29 @@ void Model::Release()
 
 void Model::RayCast(int hModel, RayCastData& rayData)
 {
+	//⓪モデルのトランスフォームをカリキュレーション
+	modelList[hModel]->transform_.Calclation();
+	
+	//①ワールド行列の逆行列
+	XMMATRIX wInv = XMMatrixInverse(nullptr, modelList[hModel]->transform_.GetWorldMatrix());
+	
+	//②レイの通過点を求める（モデル空間での例の方向ベクトルを求める）
+	XMVECTOR vpass{ rayData.start.x + rayData.dir.x,
+					rayData.start.y + rayData.dir.y,
+					rayData.start.z + rayData.dir.z,
+					rayData.start.w + rayData.dir.w };
+
+	//③rayData.startをモデル空間に変換（①をかける）
+	XMVECTOR vstart = XMLoadFloat4(&rayData.start);
+	vstart = XMVector3TransformCoord(vstart, wInv);
+
+	//④（視点から方向ベクトルをチョイ伸ばした先）通過点（②）に①をかける
+	vpass = XMVector3TransformCoord(vpass, wInv);
+	
+	//⑤rayData.dirを③から④に向かうベクトルにする（引き算）
+	vpass = vstart - vpass;
+	XMStoreFloat4(&rayData.dir, vpass);
+
+	//指定したモデル番号のFBXにレイキャスト
 	modelList[hModel]->pFbx_->RayCast(&rayData);
 }

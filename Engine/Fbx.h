@@ -18,8 +18,8 @@ class Texture;
 
 struct RayCastData
 {
-	XMFLOAT3 start;
-	XMFLOAT3 dir;
+	XMFLOAT4 start;
+	XMFLOAT4 dir;
 	bool hit;
 	float dist;
 

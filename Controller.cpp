@@ -1,7 +1,6 @@
 #include "Controller.h"
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
-#include "Engine/Fbx.h"
 
 Controller::Controller(GameObject* parent)
 	:GameObject(parent, "Controller")
@@ -78,7 +77,7 @@ void Controller::Update()
 	if (Input::IsKey(DIK_F))
 	{
 		transform_.position_.y += 0.2f;
-	}
+	} 
 	if (Input::IsKey(DIK_E))
 	{
 		transform_.position_.y -= 0.2f;
@@ -87,20 +86,6 @@ void Controller::Update()
 	vCam = XMVector3Transform(vCam, mRotate);
 	XMFLOAT3 cameraPos;
 	XMStoreFloat3(&cameraPos, vPos + vCam);
-
-	//RayCast
-	if (Input::IsKey(DIK_SPACE)) {
-		RayCastData data;
-		data.start = XMFLOAT3(0, 10, 0);   //ƒŒƒC‚Ì”­ŽËˆÊ’u
-		data.dir = XMFLOAT3(0,-1,0);       //ƒŒƒC‚Ì•ûŒü
-
-		RayCastData a;
-		Fbx* pFbx = new Fbx;
-		pFbx->Fbx::RayCast(&a);
-
-		if (data.hit) transform_.position_.z += 0.1f;
-
-	}
 
 	Camera::SetPosition(cameraPos);
 	Camera::SetTarget(transform_.position_);

@@ -38,5 +38,7 @@ public:
     void Draw() override;
     void Release() override;
 
+    int GetModelHandle() { return hModel_[0]; };
+
 };
 

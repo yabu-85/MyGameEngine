@@ -3,6 +3,8 @@
 #include <string>
 #include "Engine/Direct3D.h"
 #include "Engine/Input.h"
+#include "Engine/Camera.h"
+#include "Controller.h"
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage")
@@ -42,16 +44,19 @@ void Stage::Initialize()
     for (int y = 0; y < ZSIZE; y++) {
         for (int x = 0; x < XSIZE; x++) {
             SetBlockType(x, y, (BLOCKTYPE)(rand() % (int)TYPEMAX));
-            SetBlockHeight(x, y, rand() % 3 -1);
+            SetBlockHeight(x, y, rand() % 3 + 1);
         }
     }
+    SetBlockHeight(10, 10, 50);
+    SetBlockHeight(0, 10, 50);
 
 }
 
 void Stage::Update()
 {
-    float w = (float)(Direct3D::scrWidht) / 2;
-    float h = (float)(Direct3D::scrHeight) / 2;
+    float w = 800 / 2;
+    float h = 600 / 2;
+
     //Offsetx,y は０
     //minZ = 0, maxZ = 1
 
@@ -63,26 +68,59 @@ void Stage::Update()
     };
 
     //ビューポート
-    XMMATRIX invVp = XMMatrixInverse(nullptr, vp);
+    XMMATRIX invVP = XMMatrixInverse(nullptr, vp);
     
     //プロジェクション変換
-    XMMATRIX invPrj = {};
+    XMMATRIX invProj = XMMatrixInverse(nullptr, Camera::GetProjectionMatrix());
 
     //ビュー変換
-    XMMATRIX invView = {};
+    XMMATRIX invView = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
     
     XMFLOAT3 mousePosFront = Input::GetMousePosition(); //マウスぽじげっと
     mousePosFront.z = 0.0f;
 
-    XMFLOAT3 mousePosBack = {}; //ごにょ
+    XMFLOAT3 mousePosBack = Input::GetMousePosition(); //ごにょ
     mousePosBack.z = 1.0f;
-    
+
     //1: mousePosFrontをベクトルに変換
+    XMVECTOR vMouseFront = XMLoadFloat3(&mousePosFront);
+    
     //2: ①にinvVP、invPrj、invViewをかける
+    vMouseFront = XMVector3TransformCoord(vMouseFront, invVP * invProj * invView);
+
     //3: mousePosBackをベクトルに変換
+    XMVECTOR vMouseBack = XMLoadFloat3(&mousePosBack);
+
     //4 ③にinvVP、invPrj、invViewをかける
-    //5: ②から④に向かってレイを打つ（とりあえずモデル番号は0で
-    //6: レイが当たったらブレイクポイントで止める
+    vMouseBack = XMVector3TransformCoord(vMouseBack, invVP * invProj * invView);
+
+    for (int x = 0; x < 15; x++) {
+        for (int z = 0; z < 15; z++) {
+            for (int y = 0; y < table_[x][z].height_ + 1; y++) {
+
+                //5: ②から④に向かってレイを打つ（とりあえずモデル番号は0で
+                //6: レイが当たったらブレイクポイントで止める
+                RayCastData data;
+                XMStoreFloat4(&data.start, vMouseFront);
+                XMStoreFloat4(&data.dir, vMouseBack);
+                
+                Transform trans;
+                trans.position_ = { data.start.x, data.start.y, data.start.z };
+
+                Model::SetTransform(hModel_[0], trans);
+                Model::RayCast(hModel_[0], data);
+
+                if (data.hit) {
+                    Controller* pController = (Controller*)FindObject("Controller");
+                    XMFLOAT3 pos = pController->GetPosition();
+                    pos.z += 0.001f;
+                    pController->SetPosition(pos);
+
+                }
+            }
+            
+        }
+    }
 
 }
 
