@@ -141,6 +141,7 @@ void Fbx::RayCast(RayCastData* rayData)
 
 			XMVECTOR start = XMVectorSet(rayData->start.x, rayData->start.y, rayData->start.z, 0);
 			XMVECTOR dir = XMVectorSet(rayData->dir.x, rayData->dir.y, rayData->dir.z, 0);
+			dir = XMVector3Normalize(dir);
 
 			rayData->hit = TriangleTests::Intersects(start, dir, v0, v1, v2, rayData->dist);
 

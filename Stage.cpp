@@ -44,11 +44,9 @@ void Stage::Initialize()
     for (int y = 0; y < ZSIZE; y++) {
         for (int x = 0; x < XSIZE; x++) {
             SetBlockType(x, y, (BLOCKTYPE)(rand() % (int)TYPEMAX));
-            SetBlockHeight(x, y, rand() % 3 + 1);
+            SetBlockType(x, y, DEFAULT);
         }
     }
-    SetBlockHeight(10, 10, 50);
-    SetBlockHeight(0, 10, 50);
 
 }
 
@@ -102,23 +100,21 @@ void Stage::Update()
                 //6: レイが当たったらブレイクポイントで止める
                 RayCastData data;
                 XMStoreFloat4(&data.start, vMouseFront);
-                XMStoreFloat4(&data.dir, vMouseBack);
+                XMStoreFloat4(&data.dir, vMouseBack - vMouseFront);
                 
                 Transform trans;
-                trans.position_ = { data.start.x, data.start.y, data.start.z };
-
+                trans.position_ = { (float)x, (float)y, (float)z };
                 Model::SetTransform(hModel_[0], trans);
                 Model::RayCast(hModel_[0], data);
 
                 if (data.hit) {
                     Controller* pController = (Controller*)FindObject("Controller");
                     XMFLOAT3 pos = pController->GetPosition();
-                    pos.z += 0.001f;
+                    pos.z += 0.0001f;
                     pController->SetPosition(pos);
 
                 }
             }
-            
         }
     }
 
