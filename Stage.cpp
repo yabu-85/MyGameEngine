@@ -52,8 +52,8 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    float w = 800 / 2;
-    float h = 600 / 2;
+    float w = 800.0f / 2.0f;
+    float h = 600.0f / 2.0f;
 
     //Offsetx,y ‚Í‚O
     //minZ = 0, maxZ = 1
@@ -101,18 +101,15 @@ void Stage::Update()
                 RayCastData data;
                 XMStoreFloat4(&data.start, vMouseFront);
                 XMStoreFloat4(&data.dir, vMouseBack - vMouseFront);
-                
+
                 Transform trans;
                 trans.position_ = { (float)x, (float)y, (float)z };
                 Model::SetTransform(hModel_[0], trans);
                 Model::RayCast(hModel_[0], data);
 
                 if (data.hit) {
-                    Controller* pController = (Controller*)FindObject("Controller");
-                    XMFLOAT3 pos = pController->GetPosition();
-                    pos.z += 0.0001f;
-                    pController->SetPosition(pos);
-
+                    table_[x][z].height_++;
+                    break;
                 }
             }
         }
