@@ -14,7 +14,7 @@ Stage::Stage(GameObject* parent)
 
     for (int x = 0; x < XSIZE; x++) {
         for (int z = 0; z < ZSIZE; z++) {
-            table_[x][z] = { DEFAULT, 1 };
+            table_[x][z] = { DEFAULT, 0 };
         }
     }
 
@@ -44,7 +44,6 @@ void Stage::Initialize()
     for (int y = 0; y < ZSIZE; y++) {
         for (int x = 0; x < XSIZE; x++) {
             SetBlockType(x, y, (BLOCKTYPE)(rand() % (int)TYPEMAX));
-            SetBlockType(x, y, DEFAULT);
         }
     }
 
@@ -52,6 +51,10 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
+    if (!Input::IsMouseButtonDown(0)) {
+        return;
+    }
+
     float w = 800.0f / 2.0f;
     float h = 600.0f / 2.0f;
 
@@ -60,7 +63,7 @@ void Stage::Update()
 
     XMMATRIX vp = {
         w, 0, 0, 0,
-        0, -w, 0, 0,
+        0, -h, 0, 0,
         0, 0, 1, 0,
         w, h, 0, 1
     };
@@ -92,6 +95,9 @@ void Stage::Update()
     //4 ③にinvVP、invPrj、invViewをかける
     vMouseBack = XMVector3TransformCoord(vMouseBack, invVP * invProj * invView);
 
+    int hitPos[2] = { -1, -1 };
+    float max = 999999;
+
     for (int x = 0; x < 15; x++) {
         for (int z = 0; z < 15; z++) {
             for (int y = 0; y < table_[x][z].height_ + 1; y++) {
@@ -108,11 +114,26 @@ void Stage::Update()
                 Model::RayCast(hModel_[0], data);
 
                 if (data.hit) {
-                    table_[x][z].height_++;
+
+                    XMVECTOR pos = XMVectorSet(x, y, z, 0);
+                    float distance = XMVectorGetX(XMVector3Length(pos - vMouseFront));
+
+                    if (distance < max) {
+                        max = distance;
+                        hitPos[0] = x;
+                        hitPos[1] = z;
+                    }
+
                     break;
                 }
             }
         }
+    }
+
+    if (max < 999999) {
+        table_[hitPos[0]][hitPos[1]].height_++;
+
+        int a[2] = { hitPos[0], hitPos[1] };
     }
 
 }
@@ -126,18 +147,16 @@ void Stage::Draw()
     {
         for (int z = 0; z < ZSIZE; z++)
         {
-            for (int y = 0; y < table_[x][z].height_ ; y++)
+            for (int y = 0; y < table_[x][z].height_ + 1; y++)
             {
-                blockTrans.position_.x = (float)x;
-                blockTrans.position_.y = (float)y;
-                blockTrans.position_.z = (float)z;
-
+                //table[x][z]からオブジェクトのタイプを取り出して書く！
                 int type = table_[x][z].type_;
-
-                //モデル描画
-                Model::SetTransform(hModel_[type], blockTrans);
+                Transform trans;
+                trans.position_.x = x;
+                trans.position_.y = y;
+                trans.position_.z = z;
+                Model::SetTransform(hModel_[type], trans);
                 Model::Draw(hModel_[type]);
-
             }
         }
     }
