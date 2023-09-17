@@ -51,10 +51,68 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    if (!Input::IsMouseButtonDown(0)) {
-        return;
+    if (Input::IsMouseButtonDown(0)) {
+        RayCastStage();
     }
 
+}
+
+void Stage::Draw()
+{
+    Transform blockTrans;
+
+    XMFLOAT3 lPos = { 7.0f, 1.0f, 7.0f };
+    float radius = 3.0f;
+    static float rotateY = 0;
+    rotateY++;
+
+    //回転角度をラジアンに変換
+    float rotationAngleInRadians = XMConvertToRadians(rotateY); 
+    lPos.x = lPos.x + radius * cos(rotationAngleInRadians);
+    lPos.z = lPos.z + radius * sin(rotationAngleInRadians);
+
+    for (int i = 0; i < TYPEMAX; i++) {
+        Model::SetLightPosition(hModel_[i], lPos);
+    }
+
+    //一つのStageオブジェクトで個数分表示させる
+    for (int x = 0; x < XSIZE; x++)
+    {
+        for (int z = 0; z < ZSIZE; z++)
+        {
+            for (int y = 0; y < table_[x][z].height_ + 1; y++)
+            {
+                //table[x][z]からオブジェクトのタイプを取り出して書く！
+                int type = table_[x][z].type_;
+                Transform trans;
+                trans.position_.x = x;
+                trans.position_.y = y;
+                trans.position_.z = z;
+                Model::SetTransform(hModel_[type], trans);
+                Model::Draw(hModel_[type], 2);
+            }
+        }
+    }
+}
+
+void Stage::Release()
+{
+}
+
+void Stage::SetBlockType(int _x, int _z, BLOCKTYPE _type)
+{
+    table_[_x][_z].type_ = _type;
+}
+
+void Stage::SetBlockHeight(int _x, int _z, int _height)
+{
+    table_[_x][_z].height_ = _height;
+}
+
+//--------------private
+
+void Stage::RayCastStage()
+{
     float w = 800.0f / 2.0f;
     float h = 600.0f / 2.0f;
 
@@ -70,13 +128,13 @@ void Stage::Update()
 
     //ビューポート
     XMMATRIX invVP = XMMatrixInverse(nullptr, vp);
-    
+
     //プロジェクション変換
     XMMATRIX invProj = XMMatrixInverse(nullptr, Camera::GetProjectionMatrix());
 
     //ビュー変換
     XMMATRIX invView = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
-    
+
     XMFLOAT3 mousePosFront = Input::GetMousePosition(); //マウスぽじげっと
     mousePosFront.z = 0.0f;
 
@@ -85,7 +143,7 @@ void Stage::Update()
 
     //1: mousePosFrontをベクトルに変換
     XMVECTOR vMouseFront = XMLoadFloat3(&mousePosFront);
-    
+
     //2: ①にinvVP、invPrj、invViewをかける
     vMouseFront = XMVector3TransformCoord(vMouseFront, invVP * invProj * invView);
 
@@ -135,43 +193,4 @@ void Stage::Update()
 
         int a[2] = { hitPos[0], hitPos[1] };
     }
-
-}
-
-void Stage::Draw()
-{
-    Transform blockTrans;
-
-    //一つのStageオブジェクトで個数分表示させる
-    for (int x = 0; x < XSIZE; x++)
-    {
-        for (int z = 0; z < ZSIZE; z++)
-        {
-            for (int y = 0; y < table_[x][z].height_ + 1; y++)
-            {
-                //table[x][z]からオブジェクトのタイプを取り出して書く！
-                int type = table_[x][z].type_;
-                Transform trans;
-                trans.position_.x = x;
-                trans.position_.y = y;
-                trans.position_.z = z;
-                Model::SetTransform(hModel_[type], trans);
-                Model::Draw(hModel_[type]);
-            }
-        }
-    }
-}
-
-void Stage::Release()
-{
-}
-
-void Stage::SetBlockType(int _x, int _z, BLOCKTYPE _type)
-{
-    table_[_x][_z].type_ = _type;
-}
-
-void Stage::SetBlockHeight(int _x, int _z, int _height)
-{
-    table_[_x][_z].height_ = _height;
 }

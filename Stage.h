@@ -29,6 +29,7 @@ class Stage :
 
     void SetBlockType(int _x, int _z, BLOCKTYPE _type);
     void SetBlockHeight(int _x, int _z, int _height);
+    void RayCastStage();
 
 public:
     Stage(GameObject* parent);
@@ -37,8 +38,6 @@ public:
     void Update() override;
     void Draw() override;
     void Release() override;
-
-    int GetModelHandle() { return hModel_[0]; };
 
 };
 

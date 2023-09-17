@@ -13,9 +13,9 @@ Controller::~Controller()
 
 void Controller::Initialize()
 {
-	transform_.position_.x = 0.5f;
-	transform_.position_.z = 0.0f;
-	transform_.rotate_.x = 0.0f;
+	transform_.position_.x = 7.0f;
+	transform_.position_.z = 3.0f;
+	transform_.rotate_.x = 30.0f;
 }
 
 void Controller::Update()
@@ -37,6 +37,11 @@ void Controller::Update()
 	{
 		transform_.rotate_.x -= 1.0f;
 		if (transform_.rotate_.x < -89.0f) transform_.rotate_.x = -89.0f;
+	}
+
+	if (Input::IsMouseButton(1)) {
+		transform_.rotate_.x += Input::GetMouseMove().y * 0.3f;
+		transform_.rotate_.y += Input::GetMouseMove().x * 0.3f;
 	}
 
 	//ベクトル真下とかなんでおかしくなるか、真下が見る方向を変える場所でそのせいで計算がおかしくなる

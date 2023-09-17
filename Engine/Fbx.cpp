@@ -58,12 +58,10 @@ HRESULT Fbx::Load(string fileName)
 	return S_OK;
 }
 
-void Fbx::Draw(Transform& transform)
+void Fbx::Draw(Transform& transform, int type)
 {
-	Direct3D::SetShader(SHADER_3D);
+	Direct3D::SetShader(SHADER_TYPE(type));
 	transform.Calclation();//トランスフォームを計算
-
-	XMVECTOR light = XMVector3Normalize( XMVectorSet(1, 0.8, -0.3, 0) );
 
 	for (int i = 0; i < materialCount_; i++)
 	{
@@ -73,7 +71,11 @@ void Fbx::Draw(Transform& transform)
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.diffuseColor = pMaterialList_[i].diffuse;
 		cb.isTextured = pMaterialList_[i].pTexture != nullptr;
-		cb.lightPos = XMFLOAT4{ 1, 1, 1, 0 };
+
+		//追加部分
+		cb.matWorld = XMMatrixTranspose(transform.GetWorldMatrix());;
+		cb.lightPos = lightPos;
+		cb.wLight = { 3, 3, 3, 0 };
 
 		//コンスタントバッファの更新
 		D3D11_MAPPED_SUBRESOURCE pdata;

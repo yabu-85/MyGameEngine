@@ -41,8 +41,8 @@ void Model::SetTransform(int hModel, Transform transform) {
 	modelList[hModel]->transform_ = transform;
 }
 
-void Model::Draw(int hModel) {
-	modelList[hModel]->pFbx_->Draw(modelList[hModel]->transform_);
+void Model::Draw(int hModel, int type) {
+	modelList[hModel]->pFbx_->Draw(modelList[hModel]->transform_, type);
 
 }
 
@@ -95,4 +95,10 @@ void Model::RayCast(int hModel, RayCastData& rayData)
 
 	//指定したモデル番号のFBXにレイキャスト
 	modelList[hModel]->pFbx_->RayCast(&rayData);
+}
+
+void Model::SetLightPosition(int hModel, XMFLOAT3 pos)
+{
+	modelList[hModel]->pFbx_->SetLightPosition(pos);
+
 }

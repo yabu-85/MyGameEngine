@@ -13,9 +13,10 @@ namespace Model {
 
 	int Load(std::string fileName);
 	void SetTransform(int hModel, Transform transform);
-	void Draw(int hModel);
+	void Draw(int hModel, int type = 0);
 	void Release();
 
 	void RayCast(int hModel, RayCastData& rayData);
+	void SetLightPosition(int hModel, XMFLOAT3 pos);
 
 }
