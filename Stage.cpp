@@ -61,8 +61,8 @@ void Stage::Draw()
 {
     Transform blockTrans;
 
-    XMFLOAT3 lPos = { 7.0f, 1.0f, 7.0f };
-    float radius = 3.0f;
+    XMFLOAT3 lPos = { 15.0f, 1.0f, 15.0f };
+    float radius = 5.0f;
     static float rotateY = 0;
     rotateY++;
 

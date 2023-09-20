@@ -37,6 +37,10 @@ class Fbx
 		XMMATRIX matWorld;
 		XMFLOAT4 lightPos;		//ライトの場所
 		XMFLOAT4 wLight;		//ライトっていうよりRGBの値
+
+		XMFLOAT3 pos;
+		XMFLOAT4 color;
+		XMFLOAT3 attn;
 	};
 	XMFLOAT4 lightPos = { 0,1,0,0 };
 
@@ -67,6 +71,7 @@ class Fbx
 	ID3D11Buffer** pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 	MATERIAL* pMaterialList_;
+	ID3D11Buffer* pointLightBuffer_;
 
 	void IntConstantBuffer(); //コンスタントバッファを作成
 	void InitVertex(fbxsdk::FbxMesh* mesh);

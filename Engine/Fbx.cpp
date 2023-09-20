@@ -6,7 +6,7 @@
 #include <DirectXCollision.h>
 
 Fbx::Fbx():pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr),pMaterialList_(nullptr),
-vertexCount_(0), polygonCount_(0),materialCount_(0), indexCount_(0)
+pointLightBuffer_(nullptr),	vertexCount_(0), polygonCount_(0),materialCount_(0), indexCount_(0)
 {
 }
 
@@ -61,42 +61,45 @@ HRESULT Fbx::Load(string fileName)
 void Fbx::Draw(Transform& transform, int type)
 {
 	Direct3D::SetShader(SHADER_TYPE(type));
-	transform.Calclation();//トランスフォームを計算
+	transform.Calclation(); // トランスフォームを計算
 
 	for (int i = 0; i < materialCount_; i++)
 	{
-		//コンスタントバッファに渡す情報
+		// コンスタントバッファに渡す情報
 		CONSTANT_BUFFER cb;
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.diffuseColor = pMaterialList_[i].diffuse;
 		cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
-		//追加部分
+		// 追加部分
 		cb.matWorld = XMMatrixTranspose(transform.GetWorldMatrix());;
-		cb.lightPos = lightPos;
-		cb.wLight = { 3, 3, 3, 0 };
+		cb.lightPos = lightPos; // ライトの位置を設定
+		cb.wLight = { 1, 1, 1, 0 };
 
-		//コンスタントバッファの更新
+		cb.pos = { 25 + 20, 5, 7.5 };
+		cb.color = { 1,1,1,1 };
+		cb.attn = { 3,3,3 };
+
+		// コンスタントバッファの更新
 		D3D11_MAPPED_SUBRESOURCE pdata;
-		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); // GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb)); // データを値を送る
+		Direct3D::pContext_->Unmap(pConstantBuffer_, 0); // 再開
 
-		Direct3D::pContext_->Unmap(pConstantBuffer_, 0);	//再開
-
-		//頂点バッファ インデックスバッファ、コンスタントバッファをパイプラインにセット
+		// 頂点バッファ インデックスバッファ、コンスタントバッファをパイプラインにセット
 		UINT stride = sizeof(VERTEX);
 		UINT offset = 0;
 		Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
-		// インデックスバッファーをセット
+		// インデックスバッファをセット
 		stride = sizeof(int);
 		offset = 0;
 		Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
 
-		//コンスタントバッファ
-		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
-		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+		// コンスタントバッファ
+		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_); // 頂点シェーダー用	
+		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_); // ピクセルシェーダー用
 
 		if (pMaterialList_[i].pTexture)
 		{
@@ -107,11 +110,13 @@ void Fbx::Draw(Transform& transform, int type)
 			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
 		}
 
-		//Draw
+		// HLSLにバッファを設定
+		Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pointLightBuffer_); // ライト情報用
+		Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pointLightBuffer_); // ライト情報用
+
+		// Draw
 		Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
-
 	}
-
 }
 
 void Fbx::Release()
