@@ -96,9 +96,3 @@ void Model::RayCast(int hModel, RayCastData& rayData)
 	//指定したモデル番号のFBXにレイキャスト
 	modelList[hModel]->pFbx_->RayCast(&rayData);
 }
-
-void Model::SetLightPosition(int hModel, XMFLOAT3 pos)
-{
-	modelList[hModel]->pFbx_->SetLightPosition(pos);
-
-}

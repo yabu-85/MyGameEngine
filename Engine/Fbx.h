@@ -35,14 +35,13 @@ class Fbx
 		XMFLOAT4 diffuseColor;	// ディフューズカラー（マテリアルの色）
 		bool 	 isTextured;	// テクスチャ貼ってあるかどうか
 		XMMATRIX matWorld;
-		XMFLOAT4 lightPos;		//ライトの場所
-		XMFLOAT4 wLight;		//ライトっていうよりRGBの値
-
-		XMFLOAT3 pos;
-		XMFLOAT4 color;
-		XMFLOAT3 attn;
 	};
-	XMFLOAT4 lightPos = { 0,1,0,0 };
+
+	struct POINTLIGHT_BUFFER {
+		XMFLOAT3 pos_;
+		XMFLOAT4 color_;
+		XMFLOAT3 leng_;
+	};
 
 	struct VERTEX
 	{
@@ -86,6 +85,4 @@ public:
 	void Release();
 
 	void RayCast(RayCastData* rayData);
-	void SetLightPosition(XMFLOAT3 pos) { lightPos = XMFLOAT4(pos.x, pos.y, pos.z, 0.0f); };
-
 };

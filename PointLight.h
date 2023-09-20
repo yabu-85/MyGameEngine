@@ -1,30 +1,21 @@
 #pragma once
-#include "Engine/Fbx.h"
+#include <vector>
+#include <DirectXMath.h>
+using namespace DirectX;
 
-template <class EBI> class PixelConstantBuffer {};
-
-class PointLight
+namespace PointLight
 {
-public:
-	PointLight(Fbx& mesh, float radius = 0.5f);
-	PointLight() : pos{ 0,0,0,0 } {};
-
-	void Reset() noexcept;
-	void Draw(Fbx& gfx) noexcept; //noexcept(!IS_DEBUG);
-	void Bind(Fbx& gfx) noexcept;
-
-	void Update();
-
-private:
-	struct PointLightCBuf
-	{
-		XMFLOAT4 pos;
-		float padding;
+	struct PointLightData {
+		XMFLOAT3 pos_;
+		XMFLOAT4 color_;
+		XMFLOAT3 leng_;
 	};
+	extern int pointLightNum_;
+	extern std::vector<PointLightData*> vec;
 
-	XMFLOAT4 pos;
-
-	mutable Fbx mesh;
-	mutable PixelConstantBuffer<PointLightCBuf> cbuf;
+	void PointInitialize();
+	void SetPosition(int handle, XMFLOAT3 _pos);
+	void Reset(int handle);
+	void Update(int handle);
 
 };

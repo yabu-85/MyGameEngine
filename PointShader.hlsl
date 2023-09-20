@@ -4,6 +4,14 @@
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 
+struct PointLight
+{
+    float3 pos;
+    float4 color;
+    float3 leng;
+};
+StructuredBuffer<PointLight> pointLights : register(t1);
+
 //───────────────────────────────────────
 // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
@@ -15,10 +23,6 @@ cbuffer global
     float4 diffuseColor; // ディフューズカラー（マテリアルの色）
     bool isTexture; // テクスチャ貼ってあるかどうか
     float4x4 matW;
-    
-    float4 lightPos;
-    float4 wLight;
-
 };
 
 //VSの戻り値
@@ -49,6 +53,10 @@ VS_OUT VS(float4 pos : POSITION, float2 uv : TEXCOORD, float4 normal : NORMAL)
     
     normal = float4(normal.xyz, 0);
 
+    //PointLightData GetPointLight(int index){
+    //    return pointLights[index];
+    //}
+    
     const int lightNum = 5;
     float4 lightPoss[lightNum];
     lightPoss[0] = float4(0, 2, 0, 0);

@@ -61,20 +61,6 @@ void Stage::Draw()
 {
     Transform blockTrans;
 
-    XMFLOAT3 lPos = { 15.0f, 1.0f, 15.0f };
-    float radius = 5.0f;
-    static float rotateY = 0;
-    rotateY++;
-
-    //回転角度をラジアンに変換
-    float rotationAngleInRadians = XMConvertToRadians(rotateY); 
-    lPos.x = lPos.x + radius * cos(rotationAngleInRadians);
-    lPos.z = lPos.z + radius * sin(rotationAngleInRadians);
-
-    for (int i = 0; i < TYPEMAX; i++) {
-        Model::SetLightPosition(hModel_[i], lPos);
-    }
-
     //一つのStageオブジェクトで個数分表示させる
     for (int x = 0; x < XSIZE; x++)
     {

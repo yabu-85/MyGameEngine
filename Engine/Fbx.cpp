@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include <DirectXCollision.h>
+#include "../PointLight.h"
 
 Fbx::Fbx():pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr),pMaterialList_(nullptr),
 pointLightBuffer_(nullptr),	vertexCount_(0), polygonCount_(0),materialCount_(0), indexCount_(0)
@@ -74,12 +75,11 @@ void Fbx::Draw(Transform& transform, int type)
 
 		// 追加部分
 		cb.matWorld = XMMatrixTranspose(transform.GetWorldMatrix());;
-		cb.lightPos = lightPos; // ライトの位置を設定
-		cb.wLight = { 1, 1, 1, 0 };
 
-		cb.pos = { 25 + 20, 5, 7.5 };
-		cb.color = { 1,1,1,1 };
-		cb.attn = { 3,3,3 };
+		POINTLIGHT_BUFFER cb2;
+		cb2.pos_ = { 1,1,1 };
+		cb2.color_ = { 1,1,1,1 };
+		cb2.leng_ = { 1,1,1 };
 
 		// コンスタントバッファの更新
 		D3D11_MAPPED_SUBRESOURCE pdata;
@@ -99,6 +99,7 @@ void Fbx::Draw(Transform& transform, int type)
 
 		// コンスタントバッファ
 		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_); // 頂点シェーダー用	
+		Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pConstantBuffer_); // 頂点シェーダー用	
 		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_); // ピクセルシェーダー用
 
 		if (pMaterialList_[i].pTexture)
@@ -109,10 +110,6 @@ void Fbx::Draw(Transform& transform, int type)
 			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
 			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
 		}
-
-		// HLSLにバッファを設定
-		Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pointLightBuffer_); // ライト情報用
-		Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pointLightBuffer_); // ライト情報用
 
 		// Draw
 		Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
@@ -276,7 +273,7 @@ void Fbx::IntConstantBuffer()
 {
 	//コンスタントバッファ作成
 	D3D11_BUFFER_DESC cb;
-	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
+	cb.ByteWidth = sizeof(CONSTANT_BUFFER) + sizeof(POINTLIGHT_BUFFER);
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

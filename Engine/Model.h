@@ -17,6 +17,5 @@ namespace Model {
 	void Release();
 
 	void RayCast(int hModel, RayCastData& rayData);
-	void SetLightPosition(int hModel, XMFLOAT3 pos);
 
 }
