@@ -14,8 +14,6 @@ cbuffer global
 	float4x4	matNormal;      // ワールド行列
 	float4		diffuseColor;	// ディフューズカラー（マテリアルの色）
 	bool		isTextured;		// テクスチャ貼ってあるかどうか
-	
-	float4		lightPos;			//どの方向から光が当たるか　テスト
 };
 
 //───────────────────────────────────────

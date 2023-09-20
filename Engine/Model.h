@@ -13,7 +13,7 @@ namespace Model {
 
 	int Load(std::string fileName);
 	void SetTransform(int hModel, Transform transform);
-	void Draw(int hModel, int type = 0);
+	void Draw(int hModel, int type = 1);
 	void Release();
 
 	void RayCast(int hModel, RayCastData& rayData);

@@ -76,11 +76,6 @@ void Fbx::Draw(Transform& transform, int type)
 		// 追加部分
 		cb.matWorld = XMMatrixTranspose(transform.GetWorldMatrix());;
 
-		POINTLIGHT_BUFFER cb2;
-		cb2.pos_ = { 1,1,1 };
-		cb2.color_ = { 1,1,1,1 };
-		cb2.leng_ = { 1,1,1 };
-
 		// コンスタントバッファの更新
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata); // GPUからのデータアクセスを止める
@@ -99,7 +94,6 @@ void Fbx::Draw(Transform& transform, int type)
 
 		// コンスタントバッファ
 		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_); // 頂点シェーダー用	
-		Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pConstantBuffer_); // 頂点シェーダー用	
 		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_); // ピクセルシェーダー用
 
 		if (pMaterialList_[i].pTexture)
@@ -273,7 +267,7 @@ void Fbx::IntConstantBuffer()
 {
 	//コンスタントバッファ作成
 	D3D11_BUFFER_DESC cb;
-	cb.ByteWidth = sizeof(CONSTANT_BUFFER) + sizeof(POINTLIGHT_BUFFER);
+	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
