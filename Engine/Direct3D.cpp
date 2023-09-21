@@ -22,7 +22,9 @@ namespace Direct3D
 		ID3D11RasterizerState* pRasterizerState_ = nullptr;	//ラスタライザー
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
-	int scrWidth, scrHeight;
+
+	int scrWidth;
+	int scrHeight;
 
 }
 

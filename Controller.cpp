@@ -2,6 +2,10 @@
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
 
+namespace {
+	float cameraPosBack = -1.0f;
+}
+
 Controller::Controller(GameObject* parent)
 	:GameObject(parent, "Controller")
 {
@@ -14,12 +18,24 @@ Controller::~Controller()
 void Controller::Initialize()
 {
 	transform_.position_.x = 7.0f;
+	transform_.position_.y = 5.0f;
 	transform_.position_.z = 3.0f;
 	transform_.rotate_.x = 30.0f;
 }
 
 void Controller::Update()
 {
+	//上下の移動
+	if (Input::IsKey(DIK_F))
+	{
+		transform_.position_.y += 0.2f;
+	}
+	if (Input::IsKey(DIK_E))
+	{
+		transform_.position_.y -= 0.2f;
+	}
+
+	//回転
 	if (Input::IsKey(DIK_LEFTARROW))
 	{
 		transform_.rotate_.y -= 1.0f;
@@ -39,14 +55,17 @@ void Controller::Update()
 		if (transform_.rotate_.x < -89.0f) transform_.rotate_.x = -89.0f;
 	}
 
+	//回転（マウス
 	if (Input::IsMouseButton(1)) {
 		transform_.rotate_.x += Input::GetMouseMove().y * 0.3f;
 		transform_.rotate_.y += Input::GetMouseMove().x * 0.3f;
+		if (transform_.rotate_.x > 89.0f) transform_.rotate_.x = 89.0f;
+		if (transform_.rotate_.x < -89.0f) transform_.rotate_.x = -89.0f;
 	}
 
 	//ベクトル真下とかなんでおかしくなるか、真下が見る方向を変える場所でそのせいで計算がおかしくなる
 	XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
-	XMVECTOR vCam = { 0, 0, -10, 0 };
+	XMVECTOR vCam = { 0, 0, cameraPosBack, 0 };
 	XMVECTOR vMove = XMVectorSet(0.0f, 0.0f, 0.1, 0.0f);
 	XMMATRIX mRotateY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 	XMMATRIX mRotateX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
@@ -77,16 +96,6 @@ void Controller::Update()
 	}
 	//ここ移動してる
 	XMStoreFloat3(&transform_.position_, vPos);
-
-	//上下の移動
-	if (Input::IsKey(DIK_F))
-	{
-		transform_.position_.y += 0.2f;
-	} 
-	if (Input::IsKey(DIK_E))
-	{
-		transform_.position_.y -= 0.2f;
-	}
 
 	vCam = XMVector3Transform(vCam, mRotate);
 	XMFLOAT3 cameraPos;

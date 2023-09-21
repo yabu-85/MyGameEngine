@@ -10,7 +10,7 @@ struct PointLight
     float4 color;
     float3 leng;
 };
-StructuredBuffer<PointLight> pointLights : register(t1);
+StructuredBuffer<PointLight> rLightBuffer : register(t1);
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -25,7 +25,6 @@ cbuffer global
     float4x4 matW;
 };
 
-//VSの戻り値
 //───────────────────────────────────────
 // 頂点シェーダー出力＆ピクセルシェーダー入力データ構造体
 //───────────────────────────────────────
@@ -53,9 +52,7 @@ VS_OUT VS(float4 pos : POSITION, float2 uv : TEXCOORD, float4 normal : NORMAL)
     
     normal = float4(normal.xyz, 0);
 
-    //PointLightData GetPointLight(int index){
-    //    return pointLights[index];
-    //}
+    //PointLight light = rLightBuffer[0];
     
     const int lightNum = 5;
     float4 lightPoss[lightNum];
@@ -65,13 +62,13 @@ VS_OUT VS(float4 pos : POSITION, float2 uv : TEXCOORD, float4 normal : NORMAL)
     lightPoss[3] = float4(30, 2, 30, 0);
     lightPoss[4] = float4(15, 2, 15, 0);
     
-    // 各光源の届く距離を設定する配列
+    //各光源の届く距離を設定する配列
     float lightRanges[lightNum];
-    lightRanges[0] = 10.0; // 光源0の届く距離
-    lightRanges[1] = 10.0; // 光源1の届く距離
-    lightRanges[2] = 20.0; // 光源2の届く距離
-    lightRanges[3] = 25.0; // 光源3の届く距離
-    lightRanges[4] = 5.0; // 光源4の届く距離
+    lightRanges[0] = 10.0;
+    lightRanges[1] = 10.0;
+    lightRanges[2] = 20.0;
+    lightRanges[3] = 25.0;
+    lightRanges[4] = 5.0;
     
     outData.color = float4(0, 0, 0, 0);
 

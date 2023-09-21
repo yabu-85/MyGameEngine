@@ -5,9 +5,8 @@
 #define IDD_DIALOG1                     101
 #define IDC_RADIO_UP                    1004
 #define IDC_RADIO_CHANGE                1006
-#define IDC_RADIO5                      1007
 #define IDC_RADIO_DOWN                  1008
-#define IDC_COMBO2                      1013
+#define IDC_COMBO                       1013
 
 // Next default values for new objects
 // 

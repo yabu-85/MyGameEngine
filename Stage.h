@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include <Windows.h>
 
 namespace {
     const int MODEL_NUM{ 5 };
@@ -38,6 +39,8 @@ public:
     void Update() override;
     void Draw() override;
     void Release() override;
+
+    BOOL DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp);
 
 };
 

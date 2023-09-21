@@ -5,6 +5,7 @@
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "Controller.h"
+#include "resource.h"
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage")
@@ -75,7 +76,7 @@ void Stage::Draw()
                 trans.position_.y = y;
                 trans.position_.z = z;
                 Model::SetTransform(hModel_[type], trans);
-                Model::Draw(hModel_[type], 2);
+                Model::Draw(hModel_[type]);
             }
         }
     }
@@ -99,8 +100,8 @@ void Stage::SetBlockHeight(int _x, int _z, int _height)
 
 void Stage::RayCastStage()
 {
-    float w = 800.0f / 2.0f;
-    float h = 600.0f / 2.0f;
+    float w = Direct3D::scrWidth / 2.0f;
+    float h = Direct3D::scrHeight / 2.0f;
 
     //Offsetx,y ‚Í‚O
     //minZ = 0, maxZ = 1
@@ -142,8 +143,8 @@ void Stage::RayCastStage()
     int hitPos[2] = { -1, -1 };
     float max = 999999;
 
-    for (int x = 0; x < 15; x++) {
-        for (int z = 0; z < 15; z++) {
+    for (int x = 0; x < XSIZE; x++) {
+        for (int z = 0; z < ZSIZE; z++) {
             for (int y = 0; y < table_[x][z].height_ + 1; y++) {
 
                 //5: ‡A‚©‚ç‡C‚ÉŒü‚©‚Á‚ÄƒŒƒC‚ð‘Å‚Âi‚Æ‚è‚ ‚¦‚¸ƒ‚ƒfƒ‹”Ô†‚Í0‚Å
@@ -179,4 +180,24 @@ void Stage::RayCastStage()
 
         int a[2] = { hitPos[0], hitPos[1] };
     }
+}
+
+
+BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch (msg)
+    {
+    case WM_INITDIALOG:
+        SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_CHECKED, 0);
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"ƒfƒtƒHƒ‹ƒg");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"ƒŒƒ“ƒK");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"‘Œ´");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"»’n");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"…");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_SETCURSEL, 0, 0);
+        return TRUE;
+
+    }
+
+    return FALSE;
 }
