@@ -24,7 +24,6 @@ class Stage :
     int hModel_[MODEL_NUM];    //ƒ‚ƒfƒ‹”Ô†
     int type_;
     int model_;
-    int activeTimer_;
 
     struct {
         BLOCKTYPE type_;

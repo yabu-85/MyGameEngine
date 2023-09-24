@@ -8,7 +8,7 @@
 #include "resource.h"
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent, "Stage"), type_(1), model_(0), activeTimer_(0)
+	:GameObject(parent, "Stage"), type_(1), model_(0)
 {
     for (int i = 0; i < MODEL_NUM; i++)
         hModel_[i] = -1;
@@ -52,10 +52,6 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-
-    activeTimer_--;
-    if (activeTimer_ > 0) return;
-
     if (Input::IsMouseButtonDown(0)) {
         RayCastStage();
     }
@@ -208,7 +204,6 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
         return TRUE;
 
     case WM_COMMAND:
-        activeTimer_ = 10;
 
         // コンボボックスの選択が変更されたとき
         if (HIWORD(wp) == CBN_SELCHANGE && LOWORD(wp) == IDC_COMBO)
