@@ -8,7 +8,7 @@
 #include "resource.h"
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent, "Stage")
+	:GameObject(parent, "Stage"), type_(1), model_(0), activeTimer_(0)
 {
     for (int i = 0; i < MODEL_NUM; i++)
         hModel_[i] = -1;
@@ -52,6 +52,10 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
+
+    activeTimer_--;
+    if (activeTimer_ > 0) return;
+
     if (Input::IsMouseButtonDown(0)) {
         RayCastStage();
     }
@@ -100,8 +104,8 @@ void Stage::SetBlockHeight(int _x, int _z, int _height)
 
 void Stage::RayCastStage()
 {
-    float w = Direct3D::scrWidth / 2.0f;
-    float h = Direct3D::scrHeight / 2.0f;
+    float w = (float)Direct3D::scrWidth / 2.0f;
+    float h = (float)Direct3D::scrHeight / 2.0f;
 
     //Offsetx,y は０
     //minZ = 0, maxZ = 1
@@ -140,8 +144,9 @@ void Stage::RayCastStage()
     //4 ③にinvVP、invPrj、invViewをかける
     vMouseBack = XMVector3TransformCoord(vMouseBack, invVP * invProj * invView);
 
+    const int maxLength = 999999;
     int hitPos[2] = { -1, -1 };
-    float max = 999999;
+    float max = maxLength;
 
     for (int x = 0; x < XSIZE; x++) {
         for (int z = 0; z < ZSIZE; z++) {
@@ -175,13 +180,18 @@ void Stage::RayCastStage()
         }
     }
 
-    if (max < 999999) {
-        table_[hitPos[0]][hitPos[1]].height_++;
+    if (!(max < maxLength)) return;
 
-        int a[2] = { hitPos[0], hitPos[1] };
+    //種類を変える
+    if (type_ == 0) { 
+        table_[hitPos[0]][hitPos[1]].type_ = (BLOCKTYPE)model_;
+        return;
     }
-}
 
+    //高さを変える
+    table_[hitPos[0]][hitPos[1]].height_+= type_;
+
+}
 
 BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -189,14 +199,50 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
     {
     case WM_INITDIALOG:
         SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_CHECKED, 0);
-        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"デフォルト");
-        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"レンガ");
-        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"草原");
-        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"砂地");
-        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)L"水");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)"デフォルト");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)"レンガ");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)"草原");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)"砂地");
+        SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_ADDSTRING, 0, (LPARAM)"水");
         SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_SETCURSEL, 0, 0);
         return TRUE;
 
+    case WM_COMMAND:
+        activeTimer_ = 10;
+
+        // コンボボックスの選択が変更されたとき
+        if (HIWORD(wp) == CBN_SELCHANGE && LOWORD(wp) == IDC_COMBO)
+        {
+            type_ = 0;
+            model_ = SendMessage(GetDlgItem(hDlg, IDC_COMBO), CB_GETCURSEL, 0, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_CHANGE), BM_SETCHECK, BST_CHECKED, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_UNCHECKED, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BM_SETCHECK, BST_UNCHECKED, 0);
+            return TRUE;
+        }
+
+        //ラジオボタン選択
+        if (!HIWORD(wp) == BN_CLICKED) return FALSE;
+        if (LOWORD(wp) == IDC_RADIO_UP) {
+            type_ = 1;
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_CHECKED, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BM_SETCHECK, BST_UNCHECKED, 0);
+        }
+        else if (LOWORD(wp) == IDC_RADIO_DOWN)
+        {
+            type_ = -1;
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BM_SETCHECK, BST_CHECKED, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_UNCHECKED, 0);
+        }
+        else if (LOWORD(wp) == IDC_RADIO_CHANGE)
+        {
+            type_ = 0;
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_CHANGE), BM_SETCHECK, BST_CHECKED, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_UNCHECKED, 0);
+            SendMessage(GetDlgItem(hDlg, IDC_RADIO_DOWN), BM_SETCHECK, BST_UNCHECKED, 0);
+        }
+
+        return TRUE;
     }
 
     return FALSE;

@@ -23,8 +23,7 @@ namespace Direct3D
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
 
-	int scrWidth;
-	int scrHeight;
+	int scrWidth, scrHeight;
 
 }
 

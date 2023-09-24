@@ -127,7 +127,7 @@ void Fbx::RayCast(RayCastData* rayData)
 	rayData->hit = false;
 
 	for (int material = 0; material < materialCount_; material++) {
-		for (int poly = 0; poly < polygonCount_ / 3; poly++) {
+		for (int poly = 0; poly < polygonCount_; poly++) {
 
 			int i0 = ppIndex_[material][poly * 3 + 0];
 			int i1 = ppIndex_[material][poly * 3 + 1];
