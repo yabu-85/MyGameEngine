@@ -13,8 +13,8 @@
 
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
-const int WINDOW_WIDTH = GetSystemMetrics(SM_CXSCREEN);		//スクリーンの幅
-const int WINDOW_HEIGHT = GetSystemMetrics(SM_CYSCREEN);	//スクリーンの高さ
+const int WINDOW_WIDTH = 800;		//スクリーンの幅
+const int WINDOW_HEIGHT = 600;	//スクリーンの高さ
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

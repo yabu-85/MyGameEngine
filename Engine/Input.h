@@ -19,6 +19,7 @@ namespace Input
 	bool IsKey(int keyCode);
 	bool IsKeyDown(int keyCode);
 	bool IsKeyUp(int keyCode);
+	int KeyButton();
 	
 	bool IsMouseButton(int buttonCode);
 	bool IsMouseButtonDown(int buttonCode);

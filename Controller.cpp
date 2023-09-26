@@ -3,7 +3,7 @@
 #include "Engine/Input.h"
 
 namespace {
-	float cameraPosBack = -1.0f;
+	float cameraPosBack = -5.0f;
 }
 
 Controller::Controller(GameObject* parent)
@@ -26,11 +26,11 @@ void Controller::Initialize()
 void Controller::Update()
 {
 	//è„â∫ÇÃà⁄ìÆ
-	if (Input::IsKey(DIK_F))
+	if (Input::IsKey(DIK_SPACE))
 	{
 		transform_.position_.y += 0.2f;
 	}
-	if (Input::IsKey(DIK_E))
+	if (Input::IsKey(DIK_F))
 	{
 		transform_.position_.y -= 0.2f;
 	}

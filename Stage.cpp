@@ -55,7 +55,6 @@ void Stage::Update()
     if (Input::IsMouseButtonDown(0)) {
         RayCastStage();
     }
-
 }
 
 void Stage::Draw()
@@ -76,7 +75,7 @@ void Stage::Draw()
                 trans.position_.y = y;
                 trans.position_.z = z;
                 Model::SetTransform(hModel_[type], trans);
-                Model::Draw(hModel_[type]);
+                Model::Draw(hModel_[type], 2);
             }
         }
     }

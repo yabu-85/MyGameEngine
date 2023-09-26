@@ -23,22 +23,6 @@ void PointLight::Reset(int handle)
 	
 void PointLight::Update(int handle)
 {
-	if (Input::IsKey(DIK_W))
-	{
-		vec[handle]->pos_.x += 0.2;
-	}
-	if (Input::IsKey(DIK_S))
-	{
-		vec[handle]->pos_.x += 0.2;
-	}
-	if (Input::IsKey(DIK_A))
-	{
-		vec[handle]->pos_.x += 0.2;
-	}
-	if (Input::IsKey(DIK_D))
-	{
-		vec[handle]->pos_.x += 0.2;
-	}
 }
 
 	

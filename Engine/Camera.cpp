@@ -15,7 +15,6 @@ void Camera::Initialize()
 	target_ = XMVectorSet(0, 0, 0, 0);	//ÉJÉÅÉâÇÃè≈ì_
 
 	projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)Direct3D::scrWidth / (FLOAT)Direct3D::scrHeight, 0.1f, 100.0f);
-	projMatrix_ = XMMatrixPerspectiveFovLH(XM_PIDIV4, (FLOAT)800 / (FLOAT)600, 0.1f, 100.0f);
 
 }
 

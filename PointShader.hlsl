@@ -68,7 +68,7 @@ VS_OUT VS(float4 pos : POSITION, float2 uv : TEXCOORD, float4 normal : NORMAL)
     lightRanges[1] = 10.0;
     lightRanges[2] = 20.0;
     lightRanges[3] = 25.0;
-    lightRanges[4] = 5.0;
+    lightRanges[4] = 30.0;
     
     outData.color = float4(0, 0, 0, 0);
 

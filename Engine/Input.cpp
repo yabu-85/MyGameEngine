@@ -27,12 +27,12 @@ namespace Input
 		//ÉLÅ[É{Å[Éh
 		pDInput->CreateDevice(GUID_SysKeyboard, &pKeyDevice, nullptr);
 		pKeyDevice->SetDataFormat(&c_dfDIKeyboard); //KeyBoardÇæÇÊÇ¡Çƒnew ÇµÇƒÇÈ
-		pKeyDevice->SetCooperativeLevel(NULL, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND); 
+		pKeyDevice->SetCooperativeLevel(NULL, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 		//É}ÉEÉX	
 		pDInput->CreateDevice(GUID_SysMouse, &pMouseDevice, nullptr);
 		pMouseDevice->SetDataFormat(&c_dfDIMouse);
-		pKeyDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND); 
+		pKeyDevice->SetCooperativeLevel(hWnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
 
 	}
 
@@ -41,12 +41,12 @@ namespace Input
 		memcpy(prevKeyState, keyState, 256); //ÉÅÉÇÉäÅ[ÉRÉsÅ[
 		pKeyDevice->Acquire(); //ÉAÉNÉèÉCÉÑÅ[ïKÇ∏ì¸ÇÍÇÎÇ¡ÇƒÇ‚Ç¬ÉLÅ[É{Å[ÉhÇå©é∏Ç¡ÇƒÇµÇ‹Ç§ÇÁÇµÇ¢
 		pKeyDevice->GetDeviceState(sizeof(keyState), &keyState); //Ç±Ç±Ç≈ÉLÅ[É{Å[ÉhÇÃèÛãµÇï€ë∂ÇµÇƒÇ¢ÇÈÇÁÇµÇ¢
-	
+
 		//É}ÉEÉX
 		memcpy(&prevMouseState, &mouseState, sizeof(mouseState));
 		pMouseDevice->Acquire();
 		pMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);
-	
+
 	}
 
 	void Release()
@@ -59,7 +59,7 @@ namespace Input
 	//Å[Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|ÉLÅ[É{Å[ÉhÅ[Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|
 	bool IsKey(int keyCode)
 	{
-		if (keyState[keyCode] & 0x80) 
+		if (keyState[keyCode] & 0x80)
 		{
 			return true;
 		}
@@ -68,20 +68,31 @@ namespace Input
 
 	bool IsKeyDown(int keyCode)
 	{
-		if (!prevKeyState[keyCode] & 0x80 && IsKey(keyCode))
+		if ( IsKey(keyCode) && !prevKeyState[keyCode] & 0x80)
 		{
 			return true;
 		}
 		return false;
 	}
-
 	bool IsKeyUp(int keyCode)
 	{
-		if (prevKeyState[keyCode] & 0x80 && !IsKey(keyCode))
-		{	
+		if (!IsKey(keyCode) && prevKeyState[keyCode] & 0x80)
+		{
 			return true;
 		}
 		return false;
+	}
+	int KeyButton()
+	{
+		for (int i = DIK_ESCAPE; i <= DIK_LWIN; i++) //ä¥ímÇ∑ÇÈç≈èâÇ©ÇÁÅAç≈å„
+		{
+			if (IsKeyUp(i))
+			{
+				return i;
+			}
+		}
+
+		return 0;
 	}
 
 	//Å[Å|Å|Å|Å|Å|Å|Å|É}ÉEÉXÅ[Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|Å|

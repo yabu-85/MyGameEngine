@@ -74,7 +74,7 @@ void Fbx::Draw(Transform& transform, int type)
 		cb.isTextured = pMaterialList_[i].pTexture != nullptr;
 
 		// 追加部分
-		cb.matWorld = XMMatrixTranspose(transform.GetWorldMatrix());;
+		cb.matWorld = XMMatrixTranspose(transform.GetWorldMatrix());
 
 		// コンスタントバッファの更新
 		D3D11_MAPPED_SUBRESOURCE pdata;
