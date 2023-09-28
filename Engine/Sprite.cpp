@@ -9,7 +9,7 @@ Sprite::~Sprite()
 	Sprite::Release();
 }
 
-HRESULT Sprite::Initialize()
+HRESULT Sprite::Load(string fileName)
 {
 	HRESULT hr;
 	hr = CreateVertexBuffer(); //頂点情報の準備
@@ -30,7 +30,7 @@ HRESULT Sprite::Initialize()
 		return hr;
 	}
 
-	hr = LoadTexture(); //テクスチャのロード
+	hr = LoadTexture(fileName); //テクスチャのロード
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "テクスチャのロードに失敗しました", "エラー", MB_OK);
 		return hr;
@@ -41,7 +41,7 @@ HRESULT Sprite::Initialize()
 
 void Sprite::Draw(Transform& transform)
 {
-	Direct3D::SetShader(SHADER_2D);
+	Direct3D::SetShader(Direct3D::SHADER_2D);
 
 
 	transform.Calclation();//トランスフォームを計算
@@ -64,6 +64,11 @@ void Sprite::Release()
 	SAFE_RELEASE(pVertexBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pConstantBuffer_);
+}
+
+XMFLOAT3 Sprite::GetTextureSize()
+{
+	return pTexture_->GetSize();
 }
 
 
@@ -165,11 +170,11 @@ HRESULT Sprite::CreateConstantBuffer()
 	return S_OK;
 }
 
-HRESULT Sprite::LoadTexture()
+HRESULT Sprite::LoadTexture(string fileName)
 {
 	pTexture_ = new Texture;
 	HRESULT hr;
-	hr = pTexture_->Load("Assets\\Dice.png");
+	hr = pTexture_->Load(fileName);
 	if (FAILED(hr)) {
 		MessageBox(nullptr, "テクスチャのロードに失敗しました", "エラー", MB_OK);
 		return hr;

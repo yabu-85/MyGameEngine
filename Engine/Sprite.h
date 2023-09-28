@@ -40,7 +40,7 @@ public:
 
 	//初期化（ポリゴンを表示するための各種情報を準備
 	//戻り値：成功/失敗
-	HRESULT Initialize();
+	HRESULT Load(string fileName);
 
 	//描画
 	//引数：transform	トランスフォームクラスオブジェクト
@@ -48,6 +48,8 @@ public:
 
 	//解放
 	void Release();
+
+	XMFLOAT3 GetTextureSize();
 
 private:
 	//  Initializeから呼ばれる関数-----------------
@@ -59,7 +61,7 @@ private:
 
 	HRESULT CreateConstantBuffer(); //コンスタントバッファを作成
 
-	HRESULT LoadTexture(); //テクスチャをロード
+	HRESULT LoadTexture(string fileName); //テクスチャをロード
 
 	// Draw関数から呼ばれる関数--------------------
 	void PassDataToCB(XMMATRIX worldMatrix);	//コンスタントバッファに各種情報を渡す

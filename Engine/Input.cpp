@@ -84,9 +84,9 @@ namespace Input
 	}
 	int KeyButton()
 	{
-		for (int i = DIK_ESCAPE; i <= DIK_LWIN; i++) //感知する最初から、最後
+		for (int i = DIK_ESCAPE; i <= DIK_MEDIASELECT; i++) //感知する最初から、最後
 		{
-			if (IsKeyUp(i))
+			if (IsKey(i))
 			{
 				return i;
 			}

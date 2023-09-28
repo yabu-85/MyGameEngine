@@ -50,7 +50,7 @@ HRESULT Quad::Initialize()
 
 void Quad::Draw(Transform& transform)
 {
-	Direct3D::SetShader(SHADER_3D);
+	Direct3D::SetShader(Direct3D::SHADER_3D);
 
 	transform.Calclation();//トランスフォームを計算
 
@@ -102,6 +102,7 @@ HRESULT Quad::CreateVertexBuffer()
 		MessageBox(nullptr, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
+	return S_OK;
 }
 
 void Quad::InitIndexData()
@@ -199,6 +200,8 @@ HRESULT Quad::CreateConstantBuffer()
 		MessageBox(nullptr, "コンスタントバッファの作成に失敗しました", "エラー", MB_OK); //
 		return hr;
 	}
+	return S_OK;
+
 }
 
 HRESULT Quad::LoadTexture()

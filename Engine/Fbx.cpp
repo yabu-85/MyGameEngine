@@ -4,10 +4,9 @@
 #include "Camera.h"
 #include "Texture.h"
 #include <DirectXCollision.h>
-#include "../PointLight.h"
 
 Fbx::Fbx():pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr),pMaterialList_(nullptr),
-pointLightBuffer_(nullptr),	vertexCount_(0), polygonCount_(0),materialCount_(0), indexCount_(0)
+vertexCount_(0), polygonCount_(0),materialCount_(0), indexCount_(0)
 {
 }
 
@@ -61,7 +60,7 @@ HRESULT Fbx::Load(string fileName)
 
 void Fbx::Draw(Transform& transform, int type)
 {
-	Direct3D::SetShader(SHADER_TYPE(type));
+	Direct3D::SetShader(Direct3D::SHADER_TYPE(type));
 	transform.Calclation(); // トランスフォームを計算
 
 	for (int i = 0; i < materialCount_; i++)

@@ -66,7 +66,7 @@ void Controller::Update()
 	//ベクトル真下とかなんでおかしくなるか、真下が見る方向を変える場所でそのせいで計算がおかしくなる
 	XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
 	XMVECTOR vCam = { 0, 0, cameraPosBack, 0 };
-	XMVECTOR vMove = XMVectorSet(0.0f, 0.0f, 0.1, 0.0f);
+	XMVECTOR vMove = XMVectorSet(0.0f, 0.0f, 0.1f, 0.0f);
 	XMMATRIX mRotateY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
 	XMMATRIX mRotateX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 	XMMATRIX mRotate = mRotateX * mRotateY;

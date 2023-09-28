@@ -75,7 +75,7 @@ void Stage::Draw()
                 trans.position_.y = y;
                 trans.position_.z = z;
                 Model::SetTransform(hModel_[type], trans);
-                Model::Draw(hModel_[type], 2);
+                Model::Draw(hModel_[type]);
             }
         }
     }

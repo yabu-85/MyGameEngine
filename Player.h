@@ -4,6 +4,7 @@
 class Player : public GameObject
 {
     int hModel_;
+    int hPict_[10];
 
 public:
     Player(GameObject* parent);

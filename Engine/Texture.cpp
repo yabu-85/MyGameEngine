@@ -7,7 +7,7 @@
 #pragma comment( lib, "WindowsCodecs.lib" )
 
 Texture::Texture()
-	:pSampler_(nullptr),pSRV_(nullptr)
+	:pSampler_(nullptr),pSRV_(nullptr), size_(XMFLOAT3(0, 0, 0))
 {
 }
 
@@ -34,6 +34,11 @@ HRESULT Texture::Load(string fileName)
 		MessageBox(nullptr, "ファイルの読み込みに失敗しました", "エラー", MB_OK);
 		return E_FAIL;
 	}
+
+	//画像サイズを保存
+    size_.x = static_cast<float>(metadata.width);
+    size_.y = static_cast<float>(metadata.height);
+    size_.z = 0.0f;
 
 	//サンプラーの作成
 	D3D11_SAMPLER_DESC  SamDesc;

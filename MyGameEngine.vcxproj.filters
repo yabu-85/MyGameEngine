@@ -28,6 +28,9 @@
     <Filter Include="Engine\Collider">
       <UniqueIdentifier>{778a21b5-82b7-4424-b3af-122c2cea69a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ResourceManager">
+      <UniqueIdentifier>{a3149eb3-660d-4d83-8221-7eee9a3ae7f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestScene.cpp">
@@ -69,9 +72,6 @@
     <ClCompile Include="Engine\GameObject.cpp">
       <Filter>Engine\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Model.cpp">
-      <Filter>Engine\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\RootJob.cpp">
       <Filter>Engine\GameObject</Filter>
     </ClCompile>
@@ -86,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Model.cpp">
+      <Filter>Engine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Image.cpp">
+      <Filter>Engine\ResourceManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,9 +148,6 @@
     <ClInclude Include="Engine\GameObject.h">
       <Filter>Engine\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Model.h">
-      <Filter>Engine\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\RootJob.h">
       <Filter>Engine\GameObject</Filter>
     </ClInclude>
@@ -159,6 +162,12 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Model.h">
+      <Filter>Engine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Image.h">
+      <Filter>Engine\ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
