@@ -12,7 +12,8 @@ void TestScene::Initialize()
 {
 	Instantiate<Stage>(this);
 	Instantiate<Controller>(this);
-	Instantiate<Player>(this);
+	
+	//Instantiate<Player>(this);
 
 }
 

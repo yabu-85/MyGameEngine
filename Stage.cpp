@@ -204,6 +204,12 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 
     case WM_COMMAND:
 
+        if (LOWORD(wp) == ID_MENU_NEW)
+        {
+            KillMe();
+            return TRUE;
+        }
+
         // コンボボックスの選択が変更されたとき
         if (HIWORD(wp) == CBN_SELCHANGE && LOWORD(wp) == IDC_COMBO)
         {
@@ -237,6 +243,7 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
         }
 
         return TRUE;
+
     }
 
     return FALSE;
