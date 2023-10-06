@@ -203,13 +203,6 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
         return TRUE;
 
     case WM_COMMAND:
-
-        if (LOWORD(wp) == ID_MENU_NEW)
-        {
-            KillMe();
-            return TRUE;
-        }
-
         // コンボボックスの選択が変更されたとき
         if (HIWORD(wp) == CBN_SELCHANGE && LOWORD(wp) == IDC_COMBO)
         {
@@ -247,4 +240,16 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
     }
 
     return FALSE;
+}
+
+void Stage::Save()
+{
+    const int MAX_PACE = 30;
+    char fileName[MAX_PACE] = "無題.map"; //ファイル名を入れる変数
+
+    OPENFILENAMEA ofn;
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.lpstrFilter = TEXT("マップデータ(" );
+
 }
