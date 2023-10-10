@@ -21,6 +21,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp);
 
 RootJob* pRootJob = nullptr;
+Stage* pStage;
 
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
@@ -79,6 +80,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	pRootJob = new RootJob(nullptr);
 	pRootJob->Initialize();
+
+	pStage = (Stage*)pRootJob->FindObject("Stage");
 
 	CreateDialog(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, (DLGPROC)DialogProc);
 
@@ -187,6 +190,5 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 {
-	Stage* pStage = (Stage*)pRootJob->FindObject("Stage");
 	return pStage->DialogProc(hDlg, msg, wp, lp);
 }

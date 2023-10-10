@@ -6,7 +6,6 @@ namespace {
     const int MODEL_NUM{ 5 };
     const int XSIZE{ 15 };
     const int ZSIZE{ 15 };
-    const int YSIZE{ 15 }; //‚±‚êMAX‚Ì’l
 
     enum BLOCKTYPE {
         DEFAULT = 0,
@@ -33,6 +32,9 @@ class Stage :
     void SetBlockType(int _x, int _z, BLOCKTYPE _type);
     void SetBlockHeight(int _x, int _z, int _height);
     void RayCastStage();
+    
+//    BOOL Write(int** data, HANDLE hFile, DWORD dwBytes);
+//    BOOL Read(int& data, HANDLE hFile, DWORD& dwBytes);
     BOOL Read(Cell& data, HANDLE hFile, DWORD& dwBytes);
 
 public:
