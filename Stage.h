@@ -25,7 +25,7 @@ class Stage :
     int type_;
     int model_;
 
-    struct {
+    struct Cell{
         BLOCKTYPE type_;
         int height_;
     }table_[XSIZE][ZSIZE];
@@ -33,6 +33,7 @@ class Stage :
     void SetBlockType(int _x, int _z, BLOCKTYPE _type);
     void SetBlockHeight(int _x, int _z, int _height);
     void RayCastStage();
+    BOOL Read(Cell& data, HANDLE hFile, DWORD& dwBytes);
 
 public:
     Stage(GameObject* parent);

@@ -242,14 +242,129 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
     return FALSE;
 }
 
+#include <iostream>
+#include <sstream>
+using std::cout;
+using std::endl;
+
 void Stage::Save()
 {
+    /*
     const int MAX_PACE = 30;
     char fileName[MAX_PACE] = "無題.map"; //ファイル名を入れる変数
 
     OPENFILENAMEA ofn;
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.lpstrFilter = TEXT("マップデータ(" );
+    ofn.lpstrFilter = TEXT("マップデータ(..................." );
+    ofn.lpstrFile = fileName;
+    ofn.nMaxFile = OFN_OVERWRITEPROMPT;
+    ofn.lpstrDefExt = "map";
+    */
 
+    /*
+    int n[2] = { 123,456 };
+    std::stringstream oss;
+    oss << n[0] << "," << n[1] << endl;
+    string ostring = oss.str();
+    cout << ostring << endl;
+    
+    std::istringstream iss{ ostring };
+    int in[2];
+    char comma;
+    iss >> in[0] >> comma >> in[1];
+    cout << "in0  :" << in[0] << endl;
+    cout << "comma:" << comma << endl;
+    cout << "in1  :" << in[1] << endl;
+    */
+    
+    HANDLE hFile;        //ファイルのハンドル
+    hFile = CreateFile(
+        "map.txt",             //ファイル名
+        GENERIC_WRITE,           //アクセスモード（書き込み用）
+        0,                      //共有（なし）
+        NULL,                   //セキュリティ属性（継承しない）
+        CREATE_ALWAYS,           //作成方法   CREATE_ALWAYS(上書き）
+        FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
+        NULL);                  //拡張属性（なし）
+
+    //失敗したとき
+    if (hFile == INVALID_HANDLE_VALUE) {
+        return;
+    }
+
+
+    DWORD dwBytes = 0;  //書き込み位置
+    //書き込み
+    BOOL res = WriteFile(
+        hFile,                   //ファイルハンドル
+        &table_,                 //保存するデータ（文字列）
+        sizeof(table_),          //書き込む文字数
+        &dwBytes,                //書き込んだサイズを入れる変数
+        NULL);                   //オーバーラップド構造体（今回は使わない）
+
+    if (res == 0) {
+        return;
+    }
+
+    CloseHandle(hFile);
+
+    //--------------ファイル開く--------------
+
+    hFile = CreateFile(
+        "map.txt",             //ファイル名
+        GENERIC_READ,           //アクセスモード（書き込み用）
+        0,                      //共有（なし）
+        NULL,                   //セキュリティ属性（継承しない）
+        OPEN_EXISTING,           //作成方法   CREATE_ALWAYS(上書き）
+        FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
+        NULL);                  //拡張属性（なし）
+
+    //失敗したとき
+    if (hFile == INVALID_HANDLE_VALUE) {
+        return;
+    }
+
+    // 読み取るデータを格納するための変数
+    dwBytes = 0;
+
+    Cell** data = new Cell* [YSIZE];
+
+    for (int i = 0; i < YSIZE; i++) {
+        data[i] = new Cell[XSIZE];
+    }
+
+    for (int i = 0; i < YSIZE; i++) {
+        if (!Read(*data[i], hFile, dwBytes)) return;
+
+        for (int n = 0; n < XSIZE; n++) {
+            Cell a = data[i][n];
+
+            std::cout << a.height_ << std::endl;
+            std::cout << a.type_ << std::endl;
+            std::cout << std::endl;
+
+        }
+    }
+
+    CloseHandle(hFile);
+
+}
+
+
+BOOL Stage::Read(Cell& data, HANDLE hFile, DWORD& dwBytes)
+{
+    BOOL res = ReadFile(
+        hFile,
+        &data,
+        sizeof(Cell[XSIZE]),
+        &dwBytes,
+        NULL);
+
+    if (res == 0) {
+        std::wcout << L"ファイル読み取りに失敗" << GetLastError() << std::endl;
+        return false;
+    }
+
+    return true;
 }

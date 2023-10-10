@@ -167,13 +167,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		switch (LOWORD(wParam)){
 		case ID_MENU_NEW:
-			OutputDebugString("new FILE");
+			OutputDebugString("new FILE\n");
 			break;
 		case ID_MENU_OPEN:
-			OutputDebugString("open FILE");
+			OutputDebugString("open FILE\n");
 			break;
 		case ID_MENU_SAVE:
-			OutputDebugString("save FILE");
+			OutputDebugString("save FILE\n");
 			//ファイル保存ダイアログで名前を決める
 			//決めたファイル名でセーブを実行
 			Stage* pStage = (Stage*)pRootJob->FindObject("Stage");
