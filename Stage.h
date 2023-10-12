@@ -33,9 +33,11 @@ class Stage :
     void SetBlockHeight(int _x, int _z, int _height);
     void RayCastStage();
     
-//    BOOL Write(int** data, HANDLE hFile, DWORD dwBytes);
-//    BOOL Read(int& data, HANDLE hFile, DWORD& dwBytes);
-    BOOL Read(Cell& data, HANDLE hFile, DWORD& dwBytes);
+    BOOL Write(int** data, HANDLE hFile, DWORD dwBytes);
+//    BOOL Write(int data, HANDLE hFile, DWORD dwBytes);
+
+    BOOL Read(int& data, HANDLE hFile, DWORD& dwBytes);
+//    BOOL Read(Cell& data, HANDLE hFile, DWORD& dwBytes);
 
 public:
     Stage(GameObject* parent);

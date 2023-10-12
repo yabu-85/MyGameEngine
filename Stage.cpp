@@ -277,7 +277,7 @@ void Stage::Save()
     cout << "comma:" << comma << endl;
     cout << "in1  :" << in[1] << endl;
     */
-    
+
     HANDLE hFile;        //ファイルのハンドル
     hFile = CreateFile(
         "map.txt",             //ファイル名
@@ -293,29 +293,22 @@ void Stage::Save()
         return;
     }
 
-    BLOCKTYPE** pdataType = new BLOCKTYPE * [ZSIZE];
-    int** pdataHeight = new int* [ZSIZE];
-
+    int** data = new int* [XSIZE];
     for (int i = 0; i < ZSIZE; i++) {
-        pdataType[i] = new BLOCKTYPE[XSIZE];
-        pdataHeight[i] = new int[XSIZE];
-    
-        for (int n = 0; n < XSIZE; n++) {
-            pdataType[i][n] = table_[i][n].type_;
-            pdataHeight[i][n] = table_[i][n].height_;
-        }
+        data[i] = new int[XSIZE];
+        for (int n = 0; n < XSIZE; n++)
+            data[i][n] = table_[i][n].type_;
     }
 
     DWORD dwBytes = 0;  //書き込み位置
-    if (!Write(pdataHeight, hFile, dwBytes)) return;
-    if (!Write(pdataHeight, hFile, dwBytes)) return;
-    if (!Write(pdataHeight, hFile, dwBytes)) return;
+
+    //書き込み
+    if (!Write(data, hFile, dwBytes)) return;
 
     CloseHandle(hFile);
 
     //--------------ファイル開く--------------
 
-    /*
     hFile = CreateFile(
         "map.txt",             //ファイル名
         GENERIC_READ,           //アクセスモード（書き込み用）
@@ -331,22 +324,29 @@ void Stage::Save()
     }
 
     // 読み取るデータを格納するための変数
+    OutputDebugString("\n");
+
     dwBytes = 0;
+    for (int i = 0; i < XSIZE; i++) {
+        if (!Read(*data[i], hFile, dwBytes)) return;
 
-    for (int i = 0; i < ZSIZE; i++) {
-        if (!Read(*pdataHeight[i], hFile, dwBytes)) return;
+        for (int n = 0; n < ZSIZE; n++) {
+            int a = data[n][i];
+            std::string str = std::to_string(a);
 
-        for (int n = 0; n < XSIZE; n++) {
-            OutputDebugString(pdataType[i][n] + ", ");
+            OutputDebugStringA(str.c_str());
+            OutputDebugString(", ");
+
         }
+        
+        OutputDebugString("\n");
+
     }
 
     CloseHandle(hFile);
-    */
-    
 }
 
-BOOL Write(int** data, HANDLE hFile, DWORD dwBytes)
+BOOL Stage::Write(int** data, HANDLE hFile, DWORD dwBytes)
 {
     BOOL res = WriteFile(
         hFile,                   //ファイルハンドル
@@ -363,12 +363,6 @@ BOOL Write(int** data, HANDLE hFile, DWORD dwBytes)
     return true;
 }
 
-
-BOOL Stage::Write(int** data, HANDLE hFile, DWORD dwBytes)
-{
-    return 0;
-}
-
 BOOL Stage::Read(int& data, HANDLE hFile, DWORD& dwBytes)
 {
     BOOL res = ReadFile(
@@ -380,102 +374,8 @@ BOOL Stage::Read(int& data, HANDLE hFile, DWORD& dwBytes)
 
     if (res == 0) {
         std::wcout << L"ファイル読み取りに失敗" << GetLastError() << std::endl;
-        return false;
-    }
-
-}
-
-
-/*
-
-    BLOCKTYPE** pdataType = new BLOCKTYPE * [ZSIZE];
-    int** pdataHeight = new int* [ZSIZE];
-
-    for (int i = 0; i < ZSIZE; i++) {
-        pdataType[i] = new BLOCKTYPE[XSIZE];
-        pdataHeight[i] = new int[XSIZE];
-
-        for (int n = 0; n < XSIZE; n++) {
-            pdataType[i][n] = table_[i][n].type_;
-            pdataHeight[i][n] = table_[i][n].height_;
-        }
-    }
-
-    DWORD dwBytes = 0;  //書き込み位置
-    if (!Write(pdataHeight, hFile, dwBytes)) return;
-    if (!Write(pdataHeight, hFile, dwBytes)) return;
-    if (!Write(pdataHeight, hFile, dwBytes)) return;
-
-    CloseHandle(hFile);
-
-    //--------------ファイル開く--------------
-
-    /*
-    hFile = CreateFile(
-        "map.txt",             //ファイル名
-        GENERIC_READ,           //アクセスモード（書き込み用）
-        0,                      //共有（なし）
-        NULL,                   //セキュリティ属性（継承しない）
-        OPEN_EXISTING,           //作成方法   CREATE_ALWAYS(上書き）
-        FILE_ATTRIBUTE_NORMAL,  //属性とフラグ（設定なし）
-        NULL);                  //拡張属性（なし）
-
-    //失敗したとき
-    if (hFile == INVALID_HANDLE_VALUE) {
-        return;
-    }
-
-    // 読み取るデータを格納するための変数
-    dwBytes = 0;
-
-    for (int i = 0; i < ZSIZE; i++) {
-        if (!Read(*pdataHeight[i], hFile, dwBytes)) return;
-
-        for (int n = 0; n < XSIZE; n++) {
-            OutputDebugString(pdataType[i][n] + ", ");
-        }
-    }
-
-    CloseHandle(hFile);
-
-}
-
-BOOL Write(int** data, HANDLE hFile, DWORD dwBytes)
-{
-    BOOL res = WriteFile(
-        hFile,                   //ファイルハンドル
-        &data,                   //保存するデータ（文字列）
-        sizeof(data),            //書き込む文字数
-        &dwBytes,                //書き込んだサイズを入れる変数
-        NULL);                   //オーバーラップド構造体（今回は使わない）
-
-    if (res == 0) {
-        std::wcout << L"ファイル書き込みに失敗" << GetLastError() << std::endl;
         return false;
     }
 
     return true;
 }
-
-
-BOOL Stage::Write(int** data, HANDLE hFile, DWORD dwBytes)
-{
-    return 0;
-}
-
-BOOL Stage::Read(int& data, HANDLE hFile, DWORD& dwBytes)
-{
-    BOOL res = ReadFile(
-        hFile,
-        &data,
-        sizeof(int[XSIZE]),
-        &dwBytes,
-        NULL);
-
-    if (res == 0) {
-        std::wcout << L"ファイル読み取りに失敗" << GetLastError() << std::endl;
-        return false;
-    }
-
-}
-*/
