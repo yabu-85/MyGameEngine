@@ -6,6 +6,7 @@
 #include "Engine/Camera.h"
 #include "Controller.h"
 #include "resource.h"
+#include <iostream>
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage"), type_(1), model_(0)
@@ -241,11 +242,6 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
 
     return FALSE;
 }
-
-#include <iostream>
-#include <sstream>
-using std::cout;
-using std::endl;
 
 void Stage::Save()
 {
