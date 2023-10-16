@@ -62,10 +62,8 @@ void Stage::Draw()
     Transform blockTrans;
 
     //一つのStageオブジェクトで個数分表示させる
-    for (int x = 0; x < XSIZE; x++)
-    {
-        for (int z = 0; z < ZSIZE; z++)
-        {
+    for (int z = ZSIZE - 1; z >= 0; z--) {
+        for (int x = 0; x < XSIZE; x++) {
             for (int y = 0; y < table_[z][x].height_ + 1; y++)
             {
                 //table[x][z]からオブジェクトのタイプを取り出して書く！
@@ -143,9 +141,11 @@ void Stage::RayCastStage()
     int hitPos[2] = { -1, -1 };
     float max = maxLength;
 
-    for (int x = 0; x < XSIZE; x++) {
-        for (int z = 0; z < ZSIZE; z++) {
-            for (int y = 0; y < table_[x][z].height_ + 1; y++) {
+//  dataType[y][x] = table_[y][x].type_;
+
+    for (int z = ZSIZE - 1; z >= 0; z--) {
+        for (int x = 0; x < XSIZE; x++) {
+            for (int y = 0; y < table_[z][x].height_ + 1; y++) {
 
                 //5: ②から④に向かってレイを打つ（とりあえずモデル番号は0で
                 //6: レイが当たったらブレイクポイントで止める
@@ -165,8 +165,8 @@ void Stage::RayCastStage()
 
                     if (distance < max) {
                         max = distance;
-                        hitPos[0] = x;
-                        hitPos[1] = z;
+                        hitPos[0] = z;
+                        hitPos[1] = x;
                     }
 
                     break;
@@ -313,22 +313,36 @@ void Stage::Load()
     // 読み取るデータを格納するための変数
     OutputDebugString("\n");
 
-    int** data = new int* [ZSIZE];
+    int** dataType = new int* [ZSIZE];
+    int** dataHeight = new int* [ZSIZE];
     for (int y = ZSIZE - 1; y >= 0; y--) {
-        data[y] = new int[XSIZE];
+        dataType[y] = new int[XSIZE];
+        dataHeight[y] = new int[XSIZE];
 
         //データ入れちゃう
         for (int x = 0; x < XSIZE; x++) {
-            data[y][x] = table_[y][x].type_;
+            dataType[y][x] = table_[y][x].type_;
+            dataHeight[y][x] = table_[y][x].height_;
         }
     }
 
     DWORD dwBytes = 0;  //書き込み位置
+
+    //Type
     for (int y = ZSIZE - 1; y >= 0; y--) {
-        if (!Read(*data[y], hFile, dwBytes)) return;
+        if (!Read(*dataType[y], hFile, dwBytes)) return;
 
         for (int x = 0; x < XSIZE; x++) {
-            table_[y][x].type_ = (BLOCKTYPE)data[y][x];
+            table_[y][x].type_ = (BLOCKTYPE)dataType[y][x];
+        }
+    }
+
+    //Height
+    for (int y = ZSIZE - 1; y >= 0; y--) {
+        if (!Read(*dataHeight[y], hFile, dwBytes)) return;
+
+        for (int x = 0; x < XSIZE; x++) {
+            table_[y][x].height_ = dataHeight[y][x];
         }
     }
 
