@@ -8,6 +8,11 @@
 #include "resource.h"
 #include <iostream>
 
+namespace {
+    bool isPressed = false;
+    int presseTime = 0;
+}
+
 Stage::Stage(GameObject* parent)
 	:GameObject(parent, "Stage"), type_(1), model_(0)
 {
@@ -53,9 +58,19 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    if (Input::IsMouseButtonDown(0)) {
-        RayCastStage();
+    if (isPressed) {
+        presseTime++;
+        if (presseTime % 10 == 1) RayCastStage();
     }
+
+    if (Input::IsMouseButton(0)) {
+        isPressed = true;
+    }
+    else {
+        isPressed = false;
+    }
+
+
 }
 
 void Stage::Draw()
