@@ -159,6 +159,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 //ウィンドウプロシージャ（何かあった時によばれる関数）
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	Stage* pStage = nullptr;
+
 	switch (msg)
 	{
 	case WM_MOUSEMOVE:
@@ -174,12 +176,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			break;
 		case ID_MENU_OPEN:
 			OutputDebugString("open FILE\n");
+			pStage = (Stage*)pRootJob->FindObject("Stage");
+			pStage->Load();
+
 			break;
 		case ID_MENU_SAVE:
 			OutputDebugString("save FILE\n");
 			//ファイル保存ダイアログで名前を決める
 			//決めたファイル名でセーブを実行
-			Stage* pStage = (Stage*)pRootJob->FindObject("Stage");
+			pStage = (Stage*)pRootJob->FindObject("Stage");
 			pStage->Save();
 
 			break;

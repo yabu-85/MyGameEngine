@@ -66,10 +66,10 @@ void Stage::Draw()
     {
         for (int z = 0; z < ZSIZE; z++)
         {
-            for (int y = 0; y < table_[x][z].height_ + 1; y++)
+            for (int y = 0; y < table_[z][x].height_ + 1; y++)
             {
                 //table[x][z]からオブジェクトのタイプを取り出して書く！
-                int type = table_[x][z].type_;
+                int type = table_[z][x].type_;
                 Transform trans;
                 trans.position_.x = x;
                 trans.position_.y = y;
@@ -249,34 +249,7 @@ using std::endl;
 
 void Stage::Save()
 {
-    /*
-    const int MAX_PACE = 30;
-    char fileName[MAX_PACE] = "無題.map"; //ファイル名を入れる変数
-
-    OPENFILENAMEA ofn;
-    ZeroMemory(&ofn, sizeof(ofn));
-    ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.lpstrFilter = TEXT("マップデータ(..................." );
-    ofn.lpstrFile = fileName;
-    ofn.nMaxFile = OFN_OVERWRITEPROMPT;
-    ofn.lpstrDefExt = "map";
-    */
-
-    /*
-    int n[2] = { 123,456 };
-    std::stringstream oss;
-    oss << n[0] << "," << n[1] << endl;
-    string ostring = oss.str();
-    cout << ostring << endl;
-    
-    std::istringstream iss{ ostring };
-    int in[2];
-    char comma;
-    iss >> in[0] >> comma >> in[1];
-    cout << "in0  :" << in[0] << endl;
-    cout << "comma:" << comma << endl;
-    cout << "in1  :" << in[1] << endl;
-    */
+    //--------------ファイル保存--------------
 
     HANDLE hFile;        //ファイルのハンドル
     hFile = CreateFile(
@@ -293,25 +266,39 @@ void Stage::Save()
         return;
     }
 
-    int** data = new int* [XSIZE];
-    for (int i = 0; i < ZSIZE; i++) {
-        data[i] = new int[XSIZE];
-        for (int n = 0; n < XSIZE; n++)
-            data[i][n] = table_[i][n].type_;
+    int dataType[XSIZE][ZSIZE];
+    int dataHeight[XSIZE][ZSIZE];
+    for (int y = ZSIZE -1; y >= 0; y--) {
+        for (int x = 0; x < XSIZE; x++) {
+            dataType[y][x] = table_[y][x].type_;
+            dataHeight[y][x] = table_[y][x].height_;
+        }
     }
 
     DWORD dwBytes = 0;  //書き込み位置
+    for (int y = ZSIZE - 1; y >= 0; y--) {
+        for (int x = 0; x < XSIZE; x++) {
+            if (!Write(dataType[y][x], hFile, dwBytes)) return;
+        }
+    }
 
-    //書き込み
-    if (!Write(data, hFile, dwBytes)) return;
+    for (int y = ZSIZE - 1; y >= 0; y--) {
+        for (int x = 0; x < XSIZE; x++) {
+            if (!Write(dataHeight[y][x], hFile, dwBytes)) return;
+        }
+    }
 
     CloseHandle(hFile);
 
-    //--------------ファイル開く--------------
+}
 
+void Stage::Load()
+{
+    //--------------ファイル開く--------------
+    HANDLE hFile;        //ファイルのハンドル
     hFile = CreateFile(
         "map.txt",             //ファイル名
-        GENERIC_READ,           //アクセスモード（書き込み用）
+        GENERIC_READ,           //アクセスモード
         0,                      //共有（なし）
         NULL,                   //セキュリティ属性（継承しない）
         OPEN_EXISTING,           //作成方法   CREATE_ALWAYS(上書き）
@@ -326,27 +313,29 @@ void Stage::Save()
     // 読み取るデータを格納するための変数
     OutputDebugString("\n");
 
-    dwBytes = 0;
-    for (int i = 0; i < XSIZE; i++) {
-        if (!Read(*data[i], hFile, dwBytes)) return;
+    int** data = new int* [ZSIZE];
+    for (int y = ZSIZE - 1; y >= 0; y--) {
+        data[y] = new int[XSIZE];
 
-        for (int n = 0; n < ZSIZE; n++) {
-            int a = data[n][i];
-            std::string str = std::to_string(a);
-
-            OutputDebugStringA(str.c_str());
-            OutputDebugString(", ");
-
+        //データ入れちゃう
+        for (int x = 0; x < XSIZE; x++) {
+            data[y][x] = table_[y][x].type_;
         }
-        
-        OutputDebugString("\n");
+    }
 
+    DWORD dwBytes = 0;  //書き込み位置
+    for (int y = ZSIZE - 1; y >= 0; y--) {
+        if (!Read(*data[y], hFile, dwBytes)) return;
+
+        for (int x = 0; x < XSIZE; x++) {
+            table_[y][x].type_ = (BLOCKTYPE)data[y][x];
+        }
     }
 
     CloseHandle(hFile);
 }
 
-BOOL Stage::Write(int** data, HANDLE hFile, DWORD dwBytes)
+BOOL Stage::Write(int data, HANDLE hFile, DWORD dwBytes)
 {
     BOOL res = WriteFile(
         hFile,                   //ファイルハンドル
