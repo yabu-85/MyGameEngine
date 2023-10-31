@@ -56,7 +56,7 @@ void Controller::Update()
 	}
 
 	//回転（マウス
-	if (Input::IsMouseButton(1)) {
+	if (Input::IsMouseButton(1) && Input::IsKey(DIK_E)) {
 		transform_.rotate_.x += Input::GetMouseMove().y * 0.3f;
 		transform_.rotate_.y += Input::GetMouseMove().x * 0.3f;
 		if (transform_.rotate_.x > 89.0f) transform_.rotate_.x = 89.0f;

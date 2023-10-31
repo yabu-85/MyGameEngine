@@ -8,13 +8,8 @@
 #include "resource.h"
 #include <iostream>
 
-namespace {
-    bool isPressed = false;
-    int presseTime = 0;
-}
-
 Stage::Stage(GameObject* parent)
-	:GameObject(parent, "Stage"), type_(1), model_(0)
+	:GameObject(parent, "Stage"), type_(1), model_(0), isPressedL_(false), isPressedR_(false), presseTime_(0)
 {
     for (int i = 0; i < MODEL_NUM; i++)
         hModel_[i] = -1;
@@ -58,18 +53,67 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    if (isPressed) {
-        presseTime++;
-        if (presseTime % 10 == 1) RayCastStage();
+    
+
+
+
+    if (isPressedL_) {
+        presseTime_++;
+        if (presseTime_ % 10 == 1) {
+            start_ = RayCastStage();
+            
+            if (type_ == 0) {
+                //Ží—Þ‚ð•Ï‚¦‚é
+                table_[start_.x][start_.z].type_ = (BLOCKTYPE)model_;
+            }
+            else {
+                //‚‚³‚ð•Ï‚¦‚é
+                table_[start_.x][start_.z].height_ += type_;
+            }
+        }
     }
 
-    if (Input::IsMouseButton(0)) {
-        isPressed = true;
-    }
-    else {
-        isPressed = false;
-    }
+    if (Input::IsMouseButtonDown(0)) isPressedL_ = true;
+    if (Input::IsMouseButtonUp(0)) isPressedL_ = false;
 
+    if (isPressedR_ && Input::IsMouseButtonDown(0)) isPressedR_ = false;
+
+    if (Input::IsMouseButtonDown(1) && !Input::IsKey(DIK_E)) {
+        start_ = RayCastStage();
+        isPressedL_ = false;
+        isPressedR_ = true;
+    }
+    if (isPressedR_ && Input::IsMouseButtonUp(1)) {
+        end_ = RayCastStage();
+        isPressedR_ = false;
+
+        int s[2] = { start_.x, start_.z }; // 0 = x, 1 = z
+        int e[2] = { end_.x, end_.z };
+        if (start_.x > end_.x) {
+            s[0] = end_.x; e[0] = start_.x;
+        }
+        if (start_.z > end_.z) {
+            s[1] = end_.z; e[1] = start_.z;
+        }
+
+        if (type_ == 0) {
+            for (int z = s[1]; z < e[1]; z++) {
+                for (int x = s[0]; x < e[0]; x++) {
+                    for (int y = 0; y < table_[z][x].height_ + 1; y++) {
+                        table_[x][z].type_ = (BLOCKTYPE)type_;
+                    }
+                }
+            }
+        }
+        else {
+            for (int z = s[1]; z < e[1]; z++) {
+                for (int x = s[0]; x < e[0]; x++) {
+                    table_[x][z].height_ += type_;
+                }
+            }
+        }
+
+    }
 
 }
 
@@ -111,7 +155,7 @@ void Stage::SetBlockHeight(int _x, int _z, int _height)
 
 //--------------private
 
-void Stage::RayCastStage()
+Stage::CellPos Stage::RayCastStage()
 {
     float w = (float)Direct3D::scrWidth / 2.0f;
     float h = (float)Direct3D::scrHeight / 2.0f;
@@ -157,8 +201,6 @@ void Stage::RayCastStage()
     int hitPos[2] = { -1, -1 };
     float max = maxLength;
 
-//  dataType[y][x] = table_[y][x].type_;
-
     for (int z = ZSIZE - 1; z >= 0; z--) {
         for (int x = 0; x < XSIZE; x++) {
             for (int y = 0; y < table_[z][x].height_ + 1; y++) {
@@ -191,16 +233,12 @@ void Stage::RayCastStage()
         }
     }
 
-    if (!(max < maxLength)) return;
+    if (!(max < maxLength)) return CellPos();
 
-    //Ží—Þ‚ð•Ï‚¦‚é
-    if (type_ == 0) { 
-        table_[hitPos[0]][hitPos[1]].type_ = (BLOCKTYPE)model_;
-        return;
-    }
-
-    //‚‚³‚ð•Ï‚¦‚é
-    table_[hitPos[0]][hitPos[1]].height_+= type_;
+    CellPos cell;
+    cell.x = hitPos[0];
+    cell.z = hitPos[1];
+    return cell;
 
 }
 

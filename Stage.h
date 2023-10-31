@@ -29,9 +29,22 @@ class Stage :
         int height_;
     }table_[XSIZE][ZSIZE];
 
+    struct CellPos {
+        int x;
+        int y;
+        int z;
+        CellPos() : x(0), y(0), z(0) {};
+    };
+
+    CellPos start_;
+    CellPos end_;
+    bool isPressedR_;
+    bool isPressedL_;
+    int presseTime_;
+
     void SetBlockType(int _x, int _z, BLOCKTYPE _type);
     void SetBlockHeight(int _x, int _z, int _height);
-    void RayCastStage();
+    CellPos RayCastStage();
     
     BOOL Write(int data, HANDLE hFile, DWORD dwBytes);
     BOOL Read(int& data, HANDLE hFile, DWORD& dwBytes);
